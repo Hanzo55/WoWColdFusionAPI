@@ -38,10 +38,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 			
 			// ENDPOINTS
 			variables.endpoint.realm = 'http://' & getRegion() & '.battle.net/api/wow/realm/status';
+			variables.endpoint.character = 'http://' & getRegion() & '.battle.net/api/wow/character';
 			
 			// NOT YET ACTIVE
 			/*
-			variables.endpoint.character = 'http://' & getRegion() & '.battle.net/api/wow/character';
 			variables.endpoint.guild = 'http://' & getRegion() & '.battle.net/api/wow/guild/status';
 			variables.endpoint.arena = 'http://' & getRegion() & '.battle.net/api/wow/character';
 			*/
@@ -72,12 +72,13 @@ OTHER DEALINGS IN THE SOFTWARE.
 	</cffunction>
 
 	<cffunction name="getResultStruct" returntype="struct" access="private" output="false">
+		<cfargument name="resultVarName" type="string" required="true" />
 	
 		<cfset var res = StructNew() />
 		
 		<cfset res['response'] = false />
 		<cfset res['error'] = false />
-		<cfset res['realms'] = StructNew() />
+		<cfset res['#arguments.resultVarName#'] = StructNew() />
 		
 		<cfreturn res />
 	</cffunction>
@@ -100,6 +101,23 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfreturn rs />
 	</cffunction>
 
+	<cffunction name="EpochTimeToLocalDate" returntype="date" access="private" output="false">
+		<cfargument name="epoch" type="string" required="true" />
+
+		<!--- 
+			/**
+			 * Converts Epoch time to a ColdFusion date object in local time.
+			 * 
+			 * @param epoch      Epoch time, in seconds. (Required)
+			 * @return Returns a date object. 
+			 * @author Rob Brooks-Bilson (rbils@amkor.com) 
+			 * @version 1, June 21, 2002 
+			 */
+		 --->
+		
+		<cfreturn DateAdd("s", arguments.epoch, DateConvert("utc2Local", "January 1 1970 00:00")) />
+	</cffunction>
+
 	<!--- PUBLIC METHODS --->
 
 	<cffunction name="getRealms" returntype="struct" access="public" output="false">
@@ -115,7 +133,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfset var cfArr = '' />
 		<cfset var cfElem = '' />
 		<cfset var cfObjStruct = StructNew() />
-		<cfset var result = GetResultStruct() />
+		<cfset var result = GetResultStruct('realms') />
 
 		<cfloop collection="#arguments#" item="thisArg">
 			<cfif Len(arguments[thisArg])>
@@ -166,6 +184,46 @@ OTHER DEALINGS IN THE SOFTWARE.
 		</cftry>
 	
 		<cfreturn result />
+	</cffunction>
+
+	<cffunction name="getCharacter" returntype="struct" access="public" output="false">
+		<cfargument name="realm" type="string" required="true" default="" />	
+		<cfargument name="name" type="string" required="true" default="" />
+
+		<cfset var data = '' />
+		<cfset var jsonObj = '' />
+		<cfset var cfCharacterStruct = '' />
+		<cfset var dateLastModified = '' />
+		<cfset var baseEndpoint = variables.endpoint.character & '/' & nameToSlug(arguments.realm) & '/' & arguments.name />
+		<cfset var result = GetResultStruct('character') />		
+
+		<cftry>
+			<cfhttp url="#baseEndpoint#"
+					method="GET"
+					result="data"
+					throwonerror="true"
+					timeout="15" />
+					
+			<cfset jsonObj = data.FileContent />
+			
+			<!--- save a copy of date, so it doesn't get munged; DeserializeJSON() doesn't recognize an Epoch time --->
+			<cfset dateLastModified = ReReplace(jsonObj.toString(),'.*"lastModified":([0-9]+).*','\1','ONE') />
+	
+			<cfset cfCharacterStruct = DeserializeJSON(jsonObj.toString()) />
+			
+			<!--- fix lastModified (we shave it by a factor of 10, to deal with seconds rather than ms, due to size of integers in cf) --->
+			<cfset cfCharacterStruct['lastModified'] = EpochTimeToLocalDate(Left(dateLastModified,10)) />
+	
+			<cfset result.response = 'Success' />
+			<cfset result.character = cfCharacterStruct />
+			
+			<cfcatch type="any">
+				<cfset result.error = true />
+				<cfset result.response = cfcatch.message & ':' & cfcatch.detail />
+			</cfcatch>
+		</cftry>
+	
+		<cfreturn result />	
 	</cffunction>
 
 </cfcomponent>
