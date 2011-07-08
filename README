@@ -42,6 +42,9 @@ if (!wowquery.error) {
 	// Get a custom list of realms
 	my = wow.getRealms(name='Deathwing,Aerie Peak,Cho''gall'); // you use two single quotes to 'escape' a single quote in CF; doubling the char. is a typical escape sequence
 
+	// Get a character
+	a = wow.getCharacter(realm='Deathwing',name='Mature'); // for this call, name means the name of the player, so we use 'realm' to designate the server
+
 // Some kind of error happened, show it
 } else {
 
@@ -53,6 +56,9 @@ if (!wowquery.error) {
 <cfif NOT wowquery.error>
 	<!--- take a good ol' CFDUMP (on debrah's desk) --->
 	<cfdump var=#my.realms# />
+	
+	<!--- here's the character you queried --->
+	<cfdump var=#a.character# />	
 </cfif>
 
 Email me at shawn.a.holmes@gmail.com
