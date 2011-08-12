@@ -3,7 +3,7 @@
 wow = CreateObject('component','com.blizzard.services.wow').init(cache=application.cache);
 
 // uncomment the line below to use your Blizzard Application ID (supply the publicKey and privateKey they give you)
-wow = CreateObject('component','com.blizzard.services.wow').init(cache=application.cache,region='us',publicKey='XXXX',privateKey='YYYY');
+//wow = CreateObject('component','com.blizzard.services.wow').init(cache=application.cache,region='us',publicKey='XXXX',privateKey='YYYY');
 
 // example of an INIT as Europe
 //wow_eu = CreateObject('component','com.blizzard.services.wow').init('eu');
