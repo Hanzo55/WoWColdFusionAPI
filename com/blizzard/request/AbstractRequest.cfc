@@ -12,6 +12,10 @@
 		// RESPONSE
 		variables.response = StructNew();
 		
+		// PUB/PRIV
+		variables.publicKey = "";
+		variables.privateKey = "";
+		
 		// UTIL
 		variables.util = CreateObject('component','com.hanzo.util.bnet');		
 		
