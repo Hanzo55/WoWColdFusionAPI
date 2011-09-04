@@ -173,6 +173,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfargument name="pets" type="boolean" required="false" />
 		<cfargument name="achievements" type="boolean" required="false" />
 		<cfargument name="progression" type="boolean" required="false" />
+		<cfargument name="quests" type="boolean" required="false" />
+		<cfargument name="pvp" type="boolean" required="false" />
 
 		<cfset var args = arguments />
 		<cfset var arg = '' / >
@@ -293,6 +295,38 @@ OTHER DEALINGS IN THE SOFTWARE.
 		
 		<cfreturn item.getResponse() />
 	</cffunction>
+	
+	<cffunction name="getArenaInfo" returntype="struct" access="public" output="false">
+		<cfargument name="battlegroup" type="string" required="true" />
+		<cfargument name="team_type" type="string" required="true" />
+		<cfargument name="size" type="numeric" required="false" hint="how many teams to return (50 by default)" />
+
+		<cfset var arena_info = CreateObject('component','com.blizzard.request.ArenaInfoRequest').init(argumentCollection=getAuthenticationSettings()) />
+		<cfset var baseUrl = arena_info.getEndpoint() & '/' & variables.util.nameToSlug(arguments.battlegroup) & '/' & (arguments.team_type) />
+		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
+		
+		<cfif StructKeyExists(arguments,'size') AND (arguments.size)>
+			<cfset baseEndpoint = baseEndpoint & '?size=' & size />		
+		</cfif>			
+		
+		<cfset arena_info.send(baseEndpoint) />
+		
+		<cfreturn arena_info.getResponse() />
+	</cffunction>
+	
+	<cffunction name="getQuestInfo" returntype="struct" access="public" output="false">
+		<cfargument name="questId" type="numeric" required="true" />
+
+		<cfset var quest_info = CreateObject('component','com.blizzard.request.QuestInfoRequest').init(argumentCollection=getAuthenticationSettings()) />
+		<cfset var baseUrl = quest_info.getEndpoint() & '/' & (arguments.questId) />
+		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
+		
+		<cfset quest_info.send(baseEndpoint) />
+		
+		<cfreturn quest_info.getResponse() />
+	</cffunction>	
+	
+	<!--- UTILITY (LOOKUP) METHODS --->	
 
 	<cffunction name="getCharacterRaces" returntype="struct" access="public" output="false">
 
@@ -337,8 +371,41 @@ OTHER DEALINGS IN THE SOFTWARE.
 		
 		<cfreturn guild_perk.getResponse() />
 	</cffunction>
+	
+	<cffunction name="getBattlegroups" returntype="struct" access="public" output="false">
 
-	<!--- UTILITY --->
+		<cfset var battlegroups = CreateObject('component','com.blizzard.request.BattlegroupsRequest').init(argumentCollection=getAuthenticationSettings()) />
+		<cfset var baseUrl = battlegroups.getEndpoint() />
+		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
+
+		<cfset battlegroups.send(baseEndpoint) />
+		
+		<cfreturn battlegroups.getResponse() />
+	</cffunction>
+	
+	<cffunction name="getCharacterAchievements" returntype="struct" access="public" output="false">
+
+		<cfset var ca = CreateObject('component','com.blizzard.request.CharacterAchievementsRequest').init(argumentCollection=getAuthenticationSettings()) />
+		<cfset var baseUrl = ca.getEndpoint() />
+		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
+
+		<cfset ca.send(baseEndpoint) />
+		
+		<cfreturn ca.getResponse() />
+	</cffunction>
+	
+	<cffunction name="getGuildAchievements" returntype="struct" access="public" output="false">
+
+		<cfset var ga = CreateObject('component','com.blizzard.request.GuildAchievementsRequest').init(argumentCollection=getAuthenticationSettings()) />
+		<cfset var baseUrl = ga.getEndpoint() />
+		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
+
+		<cfset ga.send(baseEndpoint) />
+		
+		<cfreturn ga.getResponse() />
+	</cffunction>	
+
+	<!--- DEBUG --->
 	
 	<cffunction name="dumpCache" returntype="any" access="public" output="false">
 	
