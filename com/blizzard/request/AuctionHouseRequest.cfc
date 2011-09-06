@@ -4,7 +4,15 @@
 
 		<cfset setEndpoint('/api/wow/auction/data') />
 		
+		<cfset variables.data_factory = '' />
+		
 		<cfreturn super.init(argumentCollection=arguments) />
+	</cffunction>
+
+	<cffunction name="setDataFactory" returntype="void" access="public" output="false">
+		<cfargument name="data_factory" type="com.blizzard.factory.RequestFactory" required="true" />
+	
+		<cfset variables.data_factory = arguments.data_factory />
 	</cffunction>
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
@@ -32,6 +40,8 @@
 		<cfset var json = getJSON() />
 		<cfset var dateLastModifiedArr = ReMatch('"lastModified":[0-9]+', json) />
 		<cfset var ah = DeserializeJSON(json) />
+		<cfset var settings = StructNew() />
+		<cfset var objRequest = '' />
 
 		<cfloop from="1" to="#ArrayLen(ah.files)#" index="i">
 			<cfset ah.files[i]['lastModified'] = EpochTimeToLocalDate(ReReplace(dateLastModifiedArr[i],'"lastModified":([0-9]+)','\1','ONE')) />		
@@ -41,14 +51,12 @@
 
 		<cfif ArrayLen(ah.files)>
 			
-			<cfset auctionHouseData = CreateObject('component','com.blizzard.request.AuctionHouseDataRequest').init(getPublicKey(), getPrivateKey()) />
-			
+			<cfset settings.endPoint = ah.files[1]['url'] />
+
 			<!--- TODO: process all urls in the files array --->
-			<cfset auctionHouseData.send(ah.files[1]['url']) />
-		
-			<cfset ah_response = auctionHouseData.getResponse() />
+			<cfset objRequest = variables.data_factory.getRequest('AuctionHouseData', settings) />
 			
-			<cfset ah['data'][1] = ah_response />
+			<cfset ah['data'][1] = objRequest.getResult().data />
 		</cfif>
 
 		<cfset setResponseKey('auctionHouse', ah) />	
@@ -58,5 +66,5 @@
 
 		<cfreturn getResponseKey('auctionHouse') />
 	</cffunction>
-	
+
 </cfcomponent>
