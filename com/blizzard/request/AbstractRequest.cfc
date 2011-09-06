@@ -151,6 +151,17 @@
 		</cfif>
 	</cffunction>
 
+	<cffunction name="setBaseEndpoint" returntype="void" access="public" output="false">
+		<cfargument name="baseEndpoint" type="string" required="true" />
+	
+		<cfset variables.baseEndpoint = arguments.baseEndpoint />
+	</cffunction>
+	
+	<cffunction name="getBaseEndpoint" returntype="string" access="private" output="false">
+
+		<cfreturn variables.baseEndpoint />
+	</cffunction>
+
 	<!--- PRIVATE METHODS --->
 	
 	<cffunction name="cacheIsDirty" returntype="boolean" access="public" output="false">
@@ -269,9 +280,7 @@
 		<cfreturn res />
 	</cffunction>
 
-	<!--- PUBLIC METHODS --->
-
-	<cffunction name="send" returntype="void" access="public" output="false">
+	<cffunction name="sendRequest" returntype="void" access="private" output="false">
 		<cfargument name="absUrl" type="string" request="true" />
 
 		<cfset var data = 0 />
@@ -279,8 +288,8 @@
 
 		<cfset resetResponse() />
 
-		<cfset setRequestUrl(arguments.absUrl) />
-				
+		<cfset setRequestUrl(getBaseEndpoint()) />
+		
 		<cfset setHeader('Date', date_RFC1129()) />
 		
 		<cfif (isBnetAuthenticated())>
@@ -352,7 +361,16 @@
 					<!--- re-cache to update cachedUntil --->
 					<cfset getCache().setCache(getRequestUrl(), getJSON()) />									
 				
-				<cfelse>
+				<cfelseif NOT Len(getJSON()) AND data.Responseheader.Status_Code EQ '404'>
+				
+					<cfset setResponseKey('modified', false) />
+					<cfset setResponseKey('url', getRequestUrl()) />
+					<cfset setResponseKey('response', 'Failure') />
+					<cfset setResponseKey('error', true) />
+	
+					<cfset setResponseKey('errorDetail', 'API Currently Not Implemented') />									
+				
+				<cfelse>				
 		
 					<cfset setResponseKey('modified', true) />
 					<cfset setResponseKey('url', getRequestUrl()) />
@@ -388,6 +406,15 @@
 			<cfset setResponseData(DeserializeJSON(getJSON())) />	
 		
 		</cfif>
+	</cffunction>
+
+	<!--- PUBLIC METHODS --->
+	
+	<cffunction name="getResult" returntype="struct" access="public" output="false">
+
+		<cfset sendRequest(getBaseEndpoint()) />	
+	
+		<cfreturn getResponse() />
 	</cffunction>
 
 </cfcomponent>
