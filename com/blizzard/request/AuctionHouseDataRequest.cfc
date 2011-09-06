@@ -2,8 +2,6 @@
 
 	<cffunction name="init" returntype="AuctionHouseDataRequest" access="public" output="false">
 
-		<cfset setEndpoint('') />
-		
 		<cfreturn super.init(argumentCollection=arguments) />
 	</cffunction>
 
