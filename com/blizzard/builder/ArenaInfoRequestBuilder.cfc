@@ -14,7 +14,7 @@
 		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
 		
 		<cfif StructKeyExists(arguments,'size') AND (arguments.size)>
-			<cfset baseEndpoint = baseEndpoint & '?size=' & size />		
+			<cfset baseEndpoint = baseEndpoint & '?size=' & arguments.size />		
 		</cfif>		
 		
 		<cfset arena_info.setBaseEndpoint(baseEndpoint) />
