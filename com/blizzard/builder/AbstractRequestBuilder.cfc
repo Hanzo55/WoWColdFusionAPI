@@ -6,7 +6,7 @@
 	
 		<cfset variables.bnet_host = arguments.bnet_host />
 		<cfset variables.bnet_protocol = arguments.bnet_protocol />
-		<cfset variables.util = CreateObject('com.hanzo.util.bnet') />
+		<cfset variables.util = CreateObject('component','com.hanzo.util.bnet') />
 	
 		<cfreturn this />
 	</cffunction>
