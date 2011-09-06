@@ -41,11 +41,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 			setUseSSL(arguments.useSSL);
 			setBnetProtocol( iif(useBnetSSL(),de('https://'),de('http://')) );	//we'll use the value of useSSL() to default it, but user can change later if needed
 			
-			// CACHE
-			variables.cache = arguments.cache;
-			
-			// UTIL
-			variables.util = CreateObject('component','com.hanzo.util.bnet');
+			// FACTORY
+			variables.factory = CreateObject('component','com.blizzard.factory.RequestFactory').init(
+				argumentCollection=getFactoryInitializer(arguments.cache)
+			);
 		</cfscript>
 		
 		<cfreturn this />
@@ -86,23 +85,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfreturn variables.privateKey />
 	</cffunction>
 	
-	<cffunction name="getAuthenticationSettings" returntype="struct" access="public" output="false">
-	
-		<cfset var settings = StructNew() />
-		
-		<cfset settings.cache = variables.cache />
-		
-		<cfif Len(getPublicKey())>
-			<cfset settings.publicKey = getPublicKey() />
-		</cfif>
-		
-		<cfif Len(getPrivateKey())>
-			<cfset settings.privateKey = getPrivateKey() />
-		</cfif>
-	
-		<cfreturn settings />
-	</cffunction>	
-	
 	<cffunction name="setUseSSL" returntype="void" access="public" output="false">
 		<cfargument name="ssl" type="boolean" required="true" />
 	
@@ -112,6 +94,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 	<cffunction name="getUseSSL" returntype="boolean" access="public" output="false">
 		
 		<cfreturn variables.useSSL />
+	</cffunction>
+
+	<cffunction name="setBnetHost" returntype="void" access="public" output="false">
+		<cfargument name="bnet_host" type="string" required="true" />		
+		
+		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="setBnetHost() is not implemented. To change the top-level domain name used in the request, call setRegion() instead." />
 	</cffunction>
 	
 	<cffunction name="getBnetHost" returntype="string" access="public" output="false">
@@ -131,6 +119,21 @@ OTHER DEALINGS IN THE SOFTWARE.
 	</cffunction>	
 
 	<!--- PRIVATE METHODS --->
+	
+	<cffunction name="getFactoryInitializer" returntype="struct" access="private" output="false">
+		<cfargument name="cache" type="any" required="true" />
+	
+		<cfset var settings 			= StructNew() />
+
+		<cfset settings.publicKey		= getPublicKey() />
+		<cfset settings.privateKey 		= getPrivateKey() />
+		<cfset settings.bnet_host 		= getBnetHost() />
+		<cfset settings.bnet_protocol 	= getBnetProtocol() />
+		
+		<cfset settings.cache = arguments.cache />		
+	
+		<cfreturn settings />
+	</cffunction>
 
 	<cffunction name="getRealmStruct" returntype="struct" access="private" output="false">
 		<cfargument name="name" type="string" required="false" default="" hint="the fully formatted name of the realm" />
@@ -176,60 +179,13 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfargument name="quests" type="boolean" required="false" />
 		<cfargument name="pvp" type="boolean" required="false" />
 
-		<cfset var args = arguments />
-		<cfset var arg = '' / >
-		<cfset var fields = '' />
-		<cfset var baseUrl = '' />
-		<cfset var baseEndpoint = '' />
-		
-		<cfset var character = CreateObject('component','com.blizzard.request.CharacterRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset character = CreateObject('component','com.blizzard.decorator.LastModifiedCleaner').init(character) />
-
-		<cfset baseUrl = character.getEndpoint() & '/' & variables.util.nameToSlug(arguments.realm) & '/' & arguments.name />
-		<cfset baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
-
-		<cfset StructDelete(args,'realm') />
-		<cfset StructDelete(args,'name') />
-
-		<cfloop collection="#args#" item="arg">
-			<cfif StructKeyExists(arguments, arg) AND (arguments[arg])>
-				<cfset fields = ListAppend(fields, LCase(arg)) />
-				<!--- decorate further if achievements are involved --->
-				<cfif NOT CompareNoCase(LCase(arg), 'achievements')>
-					<cfset character = CreateObject('component','com.blizzard.decorator.AchievementCleaner').init(character) />
-				</cfif>
-			</cfif>
-		</cfloop>
-
-		<cfif Len(fields)>
-			<cfset baseEndpoint = baseEndpoint & '?fields=' & fields />		
-		</cfif>
-		
-		<cfset character.send(baseEndpoint) />
-		
-		<cfreturn character.getResponse() />
+		<cfreturn variables.factory.getRequest('Character', arguments).getResult() />
 	</cffunction>
 
 	<cffunction name="getRealms" returntype="struct" access="public" output="false">
 		<cfargument name="name" type="string" required="false" default="" />
 
-		<cfset var thisRealm = '' />
-		<cfset var realmList = '' />	
-		<cfset var realms = CreateObject('component','com.blizzard.request.RealmRequest').init(argumentCollection=getAuthenticationSettings()) />
-
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & realms.getEndpoint() />
-
-		<cfif StructKeyExists(arguments,'name') AND Len(arguments.name)>
-			<cfloop list="#arguments.name#" index="thisRealm">
-				<cfset realmList = ListAppend(realmList, variables.util.nameToSlug(Trim(thisRealm))) />
-			</cfloop>
-
-			<cfset baseEndpoint = baseEndpoint & '?realms=' & realmList />
-		</cfif>
-		
-		<cfset realms.send(baseEndpoint) />
-		
-		<cfreturn realms.getResponse() />
+		<cfreturn variables.factory.getRequest('Realms', arguments).getResult() />
 	</cffunction>
 
 	<cffunction name="getGuild" returntype="struct" access="public" output="false">
@@ -238,62 +194,19 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfargument name="members" type="boolean" required="false" />		
 		<cfargument name="achievements" type="boolean" required="false" />
 
-		<cfset var args = arguments />
-		<cfset var arg = '' / >
-		<cfset var fields = '' />
-		<cfset var baseUrl = '' />
-		<cfset var baseEndpoint = '' />
-
-		<cfset var guild = CreateObject('component','com.blizzard.request.GuildRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset guild = CreateObject('component','com.blizzard.decorator.LastModifiedCleaner').init(guild) />
-		
-		<cfset baseUrl = guild.getEndpoint() & '/' & variables.util.nameToSlug(arguments.realm) & '/' & UrlEncodedFormat(arguments.name) />
-		<cfset baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />		
-
-		<cfset StructDelete(args,'realm') />
-		<cfset StructDelete(args,'name') />
-
-		<cfloop collection="#args#" item="arg">
-			<cfif StructKeyExists(arguments, arg) AND (arguments[arg])>
-				<cfset fields = ListAppend(fields, LCase(arg)) />
-				<!--- decorate further if achievements are involved --->
-				<cfif NOT CompareNoCase(LCase(arg), 'achievements')>
-					<cfset guild = CreateObject('component','com.blizzard.decorator.AchievementCleaner').init(guild) />
-				</cfif>				
-			</cfif>
-		</cfloop>
-
-		<cfif Len(fields)>
-			<cfset baseEndpoint = baseEndpoint & '?fields=' & fields />		
-		</cfif>
-		
-		<cfset guild.send(baseEndpoint) />
-		
-		<cfreturn guild.getResponse() />
+		<cfreturn variables.factory.getRequest('Guild', arguments).getResult() />
 	</cffunction>
 
 	<cffunction name="getAuctionHouse" returntype="struct" access="public" output="false">
 		<cfargument name="realm" type="string" required="true" />
 
-		<cfset var auctionHouse = CreateObject('component','com.blizzard.request.AuctionHouseRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = auctionHouse.getEndpoint() & '/' & variables.util.nameToSlug(arguments.realm) />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
-		
-		<cfset auctionHouse.send(baseEndpoint) />
-		
-		<cfreturn auctionHouse.getResponse() />
+		<cfreturn variables.factory.getRequest('AuctionHouse', arguments).getResult() />
 	</cffunction>
 
 	<cffunction name="getItem" returntype="struct" access="public" output="false">
 		<cfargument name="itemId" type="numeric" requird="true" />
 
-		<cfset var item = CreateObject('component','com.blizzard.request.ItemRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = item.getEndpoint() & '/' & arguments.itemId />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
-
-		<cfset item.send(baseEndpoint) />
-		
-		<cfreturn item.getResponse() />
+		<cfreturn variables.factory.getRequest('Item', arguments).getResult() />
 	</cffunction>
 	
 	<cffunction name="getArenaInfo" returntype="struct" access="public" output="false">
@@ -301,115 +214,57 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfargument name="team_type" type="string" required="true" />
 		<cfargument name="size" type="numeric" required="false" hint="how many teams to return (50 by default)" />
 
-		<cfset var arena_info = CreateObject('component','com.blizzard.request.ArenaInfoRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = arena_info.getEndpoint() & '/' & variables.util.nameToSlug(arguments.battlegroup) & '/' & (arguments.team_type) />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
-		
-		<cfif StructKeyExists(arguments,'size') AND (arguments.size)>
-			<cfset baseEndpoint = baseEndpoint & '?size=' & size />		
-		</cfif>			
-		
-		<cfset arena_info.send(baseEndpoint) />
-		
-		<cfreturn arena_info.getResponse() />
+		<cfreturn variables.factory.getRequest('ArenaInfo', arguments).getResult() />	
 	</cffunction>
 	
 	<cffunction name="getQuestInfo" returntype="struct" access="public" output="false">
 		<cfargument name="questId" type="numeric" required="true" />
 
-		<cfset var quest_info = CreateObject('component','com.blizzard.request.QuestInfoRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = quest_info.getEndpoint() & '/' & (arguments.questId) />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
-		
-		<cfset quest_info.send(baseEndpoint) />
-		
-		<cfreturn quest_info.getResponse() />
+		<cfreturn variables.factory.getRequest('QuestInfo', arguments).getResult() />	
 	</cffunction>	
 	
 	<!--- UTILITY (LOOKUP) METHODS --->	
 
 	<cffunction name="getCharacterRaces" returntype="struct" access="public" output="false">
 
-		<cfset var char_races = CreateObject('component','com.blizzard.request.CharacterRacesRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = char_races.getEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
-
-		<cfset char_races.send(baseEndpoint) />
-		
-		<cfreturn char_races.getResponse() />
+		<cfreturn variables.factory.getRequest('CharacterRaces', arguments).getResult() />	
 	</cffunction>
 	
 	<cffunction name="getCharacterClasses" returntype="struct" access="public" output="false">
 
-		<cfset var char_classes = CreateObject('component','com.blizzard.request.CharacterClassesRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = char_classes.getEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
-
-		<cfset char_classes.send(baseEndpoint) />
-		
-		<cfreturn char_classes.getResponse() />	
+		<cfreturn variables.factory.getRequest('CharacterClasses', arguments).getResult() />	
 	</cffunction>	
 
 	<cffunction name="getGuildRewards" returntype="struct" access="public" output="false">
 
-		<cfset var guild_rw = CreateObject('component','com.blizzard.request.GuildRewardsRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = guild_rw.getEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
-
-		<cfset guild_rw.send(baseEndpoint) />
-		
-		<cfreturn guild_rw.getResponse() />
+		<cfreturn variables.factory.getRequest('GuildRewards', arguments).getResult() />
 	</cffunction>
 
 	<cffunction name="getGuildPerks" returntype="struct" access="public" output="false">
 
-		<cfset var guild_perk = CreateObject('component','com.blizzard.request.GuildPerksRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = guild_perk.getEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
-
-		<cfset guild_perk.send(baseEndpoint) />
-		
-		<cfreturn guild_perk.getResponse() />
+		<cfreturn variables.factory.getRequest('GuildPerks', arguments).getResult() />
 	</cffunction>
 	
 	<cffunction name="getBattlegroups" returntype="struct" access="public" output="false">
 
-		<cfset var battlegroups = CreateObject('component','com.blizzard.request.BattlegroupsRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = battlegroups.getEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
-
-		<cfset battlegroups.send(baseEndpoint) />
-		
-		<cfreturn battlegroups.getResponse() />
+		<cfreturn variables.factory.getRequest('Battlegroups', arguments).getResult() />
 	</cffunction>
 	
 	<cffunction name="getCharacterAchievements" returntype="struct" access="public" output="false">
 
-		<cfset var ca = CreateObject('component','com.blizzard.request.CharacterAchievementsRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = ca.getEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
-
-		<cfset ca.send(baseEndpoint) />
-		
-		<cfreturn ca.getResponse() />
+		<cfreturn variables.factory.getRequest('CharacterAchievements', arguments).getResult() />
 	</cffunction>
 	
 	<cffunction name="getGuildAchievements" returntype="struct" access="public" output="false">
 
-		<cfset var ga = CreateObject('component','com.blizzard.request.GuildAchievementsRequest').init(argumentCollection=getAuthenticationSettings()) />
-		<cfset var baseUrl = ga.getEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />	
-
-		<cfset ga.send(baseEndpoint) />
-		
-		<cfreturn ga.getResponse() />
+		<cfreturn variables.factory.getRequest('GuildAchievements', arguments).getResult() />		
 	</cffunction>	
 
 	<!--- DEBUG --->
 	
-	<cffunction name="dumpCache" returntype="any" access="public" output="false">
+	<!--- <cffunction name="dumpCache" returntype="any" access="public" output="false">
 	
 		<cfreturn variables.cache.dump() />
-	</cffunction>
+	</cffunction> --->
 
 </cfcomponent>
