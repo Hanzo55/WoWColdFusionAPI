@@ -5,6 +5,9 @@
 	
 	<!--- How long application vars persist --->
 	<cfset this.applicationTimeout = createTimeSpan(0,8,0,0) />
+
+	<cfset this.sessionManagement = true />
+	<cfset this.sessionTimeout = createTimeSpan(0,0,20,0) />
 	
 	<!--- Dev or Prod? --->
 	<cfset this.isDev = false />

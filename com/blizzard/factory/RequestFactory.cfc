@@ -32,6 +32,7 @@
 		addBuilder('com.blizzard.builder.BattlegroupsRequestBuilder');				
 		addBuilder('com.blizzard.builder.CharacterAchievementsRequestBuilder');			
 		addBuilder('com.blizzard.builder.GuildAchievementsRequestBuilder');
+		addBuilder('com.blizzard.builder.RecipeRequestBuilder');
 		
 		// ADD. Circular Reference for AH Data
 		getBuilder('AuctionHouseRequestBuilder').setDataFactory(this);

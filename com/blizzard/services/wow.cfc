@@ -223,6 +223,12 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfreturn variables.factory.getRequest('QuestInfo', arguments).getResult() />	
 	</cffunction>	
 	
+	<cffunction name="getRecipe" returntype="struct" access="public" output="false">
+		<cfargument name="recipeId" type="numeric" required="true" />
+	
+		<cfreturn variables.factory.getRequest('Recipe', arguments).getResult() />
+	</cffunction>
+	
 	<!--- UTILITY (LOOKUP) METHODS --->	
 
 	<cffunction name="getCharacterRaces" returntype="struct" access="public" output="false">
@@ -259,7 +265,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 		<cfreturn variables.factory.getRequest('GuildAchievements', arguments).getResult() />		
 	</cffunction>	
-
+	
 	<!--- DEBUG --->
 	
 	<!--- <cffunction name="dumpCache" returntype="any" access="public" output="false">
