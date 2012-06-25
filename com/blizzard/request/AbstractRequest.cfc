@@ -303,13 +303,14 @@
 						method="GET"
 						result="data"
 						throwonerror="false"
-						timeout="15">
+						timeout="15"
+						charset="utf-8">
 					<cfloop list="#StructKeyList(getHeaders())#" index="headerKey">
 						<cfhttpparam type="header" name="#headerKey#" value="#getHeader(headerKey)#" />
 					</cfloop>
 				</cfhttp>
-	
-				<cfset setJSON(data.FileContent.toString()) />
+				
+				<cfset setJSON(data.FileContent.toString("utf-8")) />
 				
 				<!--- handle Bnet errors --->
 				<cfif Find('nok', getJSON()) AND data.Responseheader.Status_Code EQ '500'>
