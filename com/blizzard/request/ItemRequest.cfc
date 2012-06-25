@@ -2,7 +2,7 @@
 
 	<cffunction name="init" returntype="ItemRequest" access="public" output="false">
 
-		<cfset setEndpoint('/api/wow/data/item') />
+		<cfset setEndpoint('/api/wow/item') />
 		
 		<cfreturn super.init(argumentCollection=arguments) />
 	</cffunction>
