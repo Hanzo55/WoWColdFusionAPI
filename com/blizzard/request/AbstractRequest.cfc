@@ -310,81 +310,94 @@
 					</cfloop>
 				</cfhttp>
 				
-				<cfset setJSON(data.FileContent.toString("utf-8")) />
+				<cfswitch expression="#data.Responseheader.Status_Code#">
 				
-				<!--- handle Bnet errors --->
-				<cfif Find('nok', getJSON()) AND data.Responseheader.Status_Code EQ '500'>
+					<cfcase value="200">
+
+						<cfset setJSON(data.FileContent.toString("utf-8")) />
+
+						<cfset setResponseKey('modified', true) />
+						<cfset setResponseKey('url', getRequestUrl()) />
+						<cfset setResponseKey('response', 'Success') />
+						<cfset setResponseKey('secure', iif(isBnetAuthenticated(),de('true'),de('false'))) />
+
+						<cfset setResponseData(DeserializeJSON(getJSON())) />
+
+						<!--- cache it --->
+						<cfset getCache().setCache(getRequestUrl(), getJSON()) />
 					
-					<cfset error = DeserializeJSON(getJSON()) />
+					</cfcase>
 					
-					<cfswitch expression="#error.reason#">
-						<cfcase value="Invalid Application">
-							<cfset error.detail = 'A request was made including application identification information, but either the application key is invalid or missing.' />
-						</cfcase>
-						<cfcase value="Invalid application permissions">
-							<cfset error.detail = 'A request was made to an API resource that requires a higher application permission level.' />
-						</cfcase>
-						<cfcase value="Access denied, please contact api-support@blizzard.com">
-							<cfset error.detail = 'The application or IP address has been blocked from making further requests. This ban may not be permanent.' />
-						</cfcase>
-						<cfcase value="When in doubt, blow it up. (page not found)">
-							<cfset error.detail = 'A request was made to a resource that doesn''t exist.' />
-						</cfcase>
-						<cfcase value="If at first you don't succeed, blow it up again. (too many requests)">
-							<cfset error.detail = 'The application or IP has been throttled.' />					
-						</cfcase>
-						<cfcase value="Have you not been through enough? Will you continue to fight what you cannot defeat? (something unexpected happened)">
-							<cfset error.detail = 'There was a server error or equally catastrophic exception preventing the request from being fulfilled.' />					
-						</cfcase>
-						<cfcase value="Invalid authentication header.">
-							<cfset error.detail = 'The application authorization information was mallformed or missing when expected.' />					
-						</cfcase>
-						<cfcase value="Invalid application signature.">
-							<cfset error.detail = 'The application request signature was missing or invalid. This will also be thrown if the request date outside of a 15 second window from the current GMT time.' />					
-						</cfcase>															
-						<cfdefaultcase>
-							<cfset error.detail = 'Unknown error from Bnet Community API' />					
-						</cfdefaultcase>
-					</cfswitch>
-					
-					<cfthrow message="#error.reason#" detail="#error.detail#" type="BNetAPI" />
-					
-				<cfelseif NOT Len(getJSON()) AND data.Responseheader.Status_Code EQ '304'>
-				
-					<!--- not modified, go back to the cache --->
-					<cfset setJSON(getCache().getCache(getRequestUrl()).data) />
-					<cfset setResponseKey('modified', false) />
-					<cfset setResponseKey('url', getRequestUrl()) />
-					<cfset setResponseKey('response', 'Success') />
-		
-					<cfset setResponseData(DeserializeJSON(getJSON())) />
-					
-					<!--- re-cache to update cachedUntil --->
-					<cfset getCache().setCache(getRequestUrl(), getJSON()) />									
-				
-				<cfelseif NOT Len(getJSON()) AND data.Responseheader.Status_Code EQ '404'>
-				
-					<cfset setResponseKey('modified', false) />
-					<cfset setResponseKey('url', getRequestUrl()) />
-					<cfset setResponseKey('response', 'Failure') />
-					<cfset setResponseKey('error', true) />
-	
-					<cfset setResponseKey('errorDetail', 'API Currently Not Implemented') />									
-				
-				<cfelse>				
-		
-					<cfset setResponseKey('modified', true) />
-					<cfset setResponseKey('url', getRequestUrl()) />
-					<cfset setResponseKey('response', 'Success') />
-					<cfset setResponseKey('secure', iif(isBnetAuthenticated(),de('true'),de('false'))) />
-		
-					<cfset setResponseData(DeserializeJSON(getJSON())) />
-					
-					<!--- cache it --->
-					<cfset getCache().setCache(getRequestUrl(), getJSON()) />
-					
-				</cfif>
+					<cfcase value="304">
+
+						<!--- not modified, go back to the cache --->
+						<cfset setJSON(getCache().getCache(getRequestUrl()).data) />
+						<cfset setResponseKey('modified', false) />
+						<cfset setResponseKey('url', getRequestUrl()) />
+						<cfset setResponseKey('response', 'Success') />
 			
+						<cfset setResponseData(DeserializeJSON(getJSON())) />
+						
+						<!--- re-cache to update cachedUntil --->
+						<cfset getCache().setCache(getRequestUrl(), getJSON()) />
+					
+					</cfcase>
+					
+					<cfcase value="404">
+
+						<cfset setResponseKey('modified', false) />
+						<cfset setResponseKey('url', getRequestUrl()) />
+						<cfset setResponseKey('response', 'Failure') />
+						<cfset setResponseKey('error', true) />
+		
+						<cfset setResponseKey('errorDetail', 'API Currently Not Implemented') />									
+					
+					</cfcase>
+					
+					<cfcase value="500">
+
+						<cfset error = DeserializeJSON(getJSON()) />
+					
+						<cfswitch expression="#error.reason#">
+							<cfcase value="Invalid Application">
+								<cfset error.detail = 'A request was made including application identification information, but either the application key is invalid or missing.' />
+							</cfcase>
+							<cfcase value="Invalid application permissions">
+								<cfset error.detail = 'A request was made to an API resource that requires a higher application permission level.' />
+							</cfcase>
+							<cfcase value="Access denied, please contact api-support@blizzard.com">
+								<cfset error.detail = 'The application or IP address has been blocked from making further requests. This ban may not be permanent.' />
+							</cfcase>
+							<cfcase value="When in doubt, blow it up. (page not found)">
+								<cfset error.detail = 'A request was made to a resource that doesn''t exist.' />
+							</cfcase>
+							<cfcase value="If at first you don't succeed, blow it up again. (too many requests)">
+								<cfset error.detail = 'The application or IP has been throttled.' />					
+							</cfcase>
+							<cfcase value="Have you not been through enough? Will you continue to fight what you cannot defeat? (something unexpected happened)">
+								<cfset error.detail = 'There was a server error or equally catastrophic exception preventing the request from being fulfilled.' />					
+							</cfcase>
+							<cfcase value="Invalid authentication header.">
+								<cfset error.detail = 'The application authorization information was mallformed or missing when expected.' />					
+							</cfcase>
+							<cfcase value="Invalid application signature.">
+								<cfset error.detail = 'The application request signature was missing or invalid. This will also be thrown if the request date outside of a 15 second window from the current GMT time.' />					
+							</cfcase>															
+							<cfdefaultcase>
+								<cfset error.detail = 'Unknown error from Bnet Community API' />					
+							</cfdefaultcase>
+						</cfswitch>
+					
+						<cfthrow message="#error.reason#" detail="#error.detail#" type="BNetAPI" />
+					
+					</cfcase>
+					
+					<cfdefaultcase>
+						<cfthrow message="Unknown Status Code" detail="The BNetAPI returned a status code of #data.Responseheader.Status_Code#, which is unhandled." type="BNetAPI" />
+					</cfdefaultcase>
+				
+				</cfswitch>
+
 				<cfcatch type="any">
 					
 					<!--- handle native errors --->
@@ -395,7 +408,9 @@
 					<cfset setResponseKey('error', true) />
 	
 					<cfset setResponseKey('errorDetail', cfcatch.message & ': ' & cfcatch.detail) />
+
 				</cfcatch>
+
 			</cftry>
 
 		<cfelse>
