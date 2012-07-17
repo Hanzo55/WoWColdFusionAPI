@@ -314,17 +314,33 @@
 				
 					<cfcase value="200">
 
-						<cfset setJSON(data.FileContent.toString("utf-8")) />
+						<cfif StructKeyExists(data,'FileContent') AND NOT IsSimpleValue(data.FileContent)>
+							
+							<cfset setJSON(data.FileContent.toString('utf-8')) />
+	
+							<cfset setResponseKey('modified', true) />
+							<cfset setResponseKey('url', getRequestUrl()) />
+							<cfset setResponseKey('response', 'Success') />
+							<cfset setResponseKey('secure', iif(isBnetAuthenticated(),de('true'),de('false'))) />
+	
+							<cfset setResponseData(DeserializeJSON(getJSON())) />
+	
+							<!--- cache it --->
+							<cfset getCache().setCache(getRequestUrl(), getJSON()) />
 
-						<cfset setResponseKey('modified', true) />
-						<cfset setResponseKey('url', getRequestUrl()) />
-						<cfset setResponseKey('response', 'Success') />
-						<cfset setResponseKey('secure', iif(isBnetAuthenticated(),de('true'),de('false'))) />
-
-						<cfset setResponseData(DeserializeJSON(getJSON())) />
-
-						<!--- cache it --->
-						<cfset getCache().setCache(getRequestUrl(), getJSON()) />
+						<cfelse>
+						
+							<cfset setResponseKey('modified', false) />
+							<cfset setResponseKey('url', getRequestUrl()) />
+							<cfset setResponseKey('response', 'Failure') />
+							<cfset setResponseKey('error', true) />
+			
+							<cfset setResponseKey('errorDetail', 'JSON payload not found') />
+							
+							<!--- new for this case --->
+							<cfset setResponseKey('debug', data.FileContent) />
+						
+						</cfif>
 					
 					</cfcase>
 					
@@ -332,6 +348,7 @@
 
 						<!--- not modified, go back to the cache --->
 						<cfset setJSON(getCache().getCache(getRequestUrl()).data) />
+
 						<cfset setResponseKey('modified', false) />
 						<cfset setResponseKey('url', getRequestUrl()) />
 						<cfset setResponseKey('response', 'Success') />
