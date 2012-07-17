@@ -314,9 +314,15 @@
 				
 					<cfcase value="200">
 
-						<cfif StructKeyExists(data,'FileContent') AND NOT IsSimpleValue(data.FileContent)>
-							
-							<cfset setJSON(data.FileContent.toString('utf-8')) />
+						<cfif StructKeyExists(data,'FileContent')>
+
+							<cfif NOT IsSimpleValue(data.FileContent)>
+								<!--- CF9 and prev. do not parse application/json appropriately --->								
+								<cfset setJSON(data.FileContent.toString('utf-8')) />								
+							<cfelse>
+								<!--- CF10, however, parses it into text correctly --->
+								<cfset setJSON(data.FileContent) />						
+							</cfif>
 	
 							<cfset setResponseKey('modified', true) />
 							<cfset setResponseKey('url', getRequestUrl()) />
