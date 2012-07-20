@@ -310,43 +310,35 @@
 					</cfloop>
 				</cfhttp>
 				
+				<cfif StructKeyExists(data,'FileContent')>
+
+					<cfif NOT IsSimpleValue(data.FileContent)>
+						<!--- CF9 and prev. do not parse application/json appropriately --->								
+						<cfset setJSON(data.FileContent.toString('utf-8')) />								
+					<cfelse>
+						<!--- CF10, however, parses it into text correctly --->
+						<cfset setJSON(data.FileContent) />						
+					</cfif>
+					
+				<cfelse>
+				
+					<cfthrow message="Response Not Returned from Battle.Net" detail="The request to the Battle.net API was not returned." type="BNetAPI" />
+					
+				</cfif>
+				
 				<cfswitch expression="#data.Responseheader.Status_Code#">
 				
 					<cfcase value="200">
-
-						<cfif StructKeyExists(data,'FileContent')>
-
-							<cfif NOT IsSimpleValue(data.FileContent)>
-								<!--- CF9 and prev. do not parse application/json appropriately --->								
-								<cfset setJSON(data.FileContent.toString('utf-8')) />								
-							<cfelse>
-								<!--- CF10, however, parses it into text correctly --->
-								<cfset setJSON(data.FileContent) />						
-							</cfif>
 	
-							<cfset setResponseKey('modified', true) />
-							<cfset setResponseKey('url', getRequestUrl()) />
-							<cfset setResponseKey('response', 'Success') />
-							<cfset setResponseKey('secure', iif(isBnetAuthenticated(),de('true'),de('false'))) />
-	
-							<cfset setResponseData(DeserializeJSON(getJSON())) />
-	
-							<!--- cache it --->
-							<cfset getCache().setCache(getRequestUrl(), getJSON()) />
+						<cfset setResponseKey('modified', true) />
+						<cfset setResponseKey('url', getRequestUrl()) />
+						<cfset setResponseKey('response', 'Success') />
+						<cfset setResponseKey('secure', iif(isBnetAuthenticated(),de('true'),de('false'))) />
 
-						<cfelse>
-						
-							<cfset setResponseKey('modified', false) />
-							<cfset setResponseKey('url', getRequestUrl()) />
-							<cfset setResponseKey('response', 'Failure') />
-							<cfset setResponseKey('error', true) />
-			
-							<cfset setResponseKey('errorDetail', 'JSON payload not found') />
-							
-							<!--- new for this case --->
-							<cfset setResponseKey('debug', data.FileContent) />
-						
-						</cfif>
+						<cfset setResponseData(DeserializeJSON(getJSON())) />
+
+						<!--- cache it --->
+						<cfset getCache().setCache(getRequestUrl(), getJSON()) />
 					
 					</cfcase>
 					
@@ -372,8 +364,12 @@
 						<cfset setResponseKey('url', getRequestUrl()) />
 						<cfset setResponseKey('response', 'Failure') />
 						<cfset setResponseKey('error', true) />
-		
-						<cfset setResponseKey('errorDetail', 'API Currently Not Implemented') />									
+						
+						<cfif Len(getJSON())>
+							<cfset setResponseKey('errorDetail', DeserializeJSON(getJSON()).reason) />
+						<cfelse>
+							<cfset setResponseKey('errorDetail', 'API Currently Not Implemented') />
+						</cfif>
 					
 					</cfcase>
 					
