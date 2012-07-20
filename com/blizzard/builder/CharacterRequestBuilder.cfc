@@ -14,6 +14,8 @@
 		<cfset var args = arguments />
 		<cfset var baseUrl = '' />
 		<cfset var baseEndpoint = '' />
+		<cfset var sortedKeys = '' />
+		<cfset var arg = '' />		
 		
 		<cfset var character = CreateObject('component','com.blizzard.request.CharacterRequest').init(getPublicKey(), getPrivateKey(), getCache()) />
 		<cfset character = CreateObject('component','com.blizzard.decorator.LastModifiedCleaner').init(character) />	
@@ -23,9 +25,11 @@
 
 		<cfset StructDelete(args,'realm') />
 		<cfset StructDelete(args,'name') />
-
-		<cfloop collection="#args#" item="arg">
-			<cfif StructKeyExists(arguments, arg) AND (arguments[arg])>
+		
+		<cfset sortedKeys = ListSort(StructKeyList(args),"text") />
+		
+		<cfloop list="#sortedKeys#" index="arg">
+			<cfif StructKeyExists(arguments, arg) AND Len(arguments[arg]) AND (arguments[arg])>
 				<cfset fields = ListAppend(fields, LCase(arg)) />
 				<!--- decorate further if achievements are involved --->
 				<cfif NOT CompareNoCase(LCase(arg), 'achievements')>
