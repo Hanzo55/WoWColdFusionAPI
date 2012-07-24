@@ -10,7 +10,6 @@
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 
 		<cfset var fields = '' />
-		<cfset var arg = '' />
 		<cfset var args = arguments />
 		<cfset var baseUrl = '' />
 		<cfset var baseEndpoint = '' />
