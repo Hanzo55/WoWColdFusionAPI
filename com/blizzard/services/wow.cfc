@@ -44,6 +44,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfreturn rs />
 	</cffunction>
 
+	<cffunction name="getServiceEndpoint" returntype="string" access="private" output="false">
+	
+		<cfreturn super.getServiceEndpoint() & '/wow' />
+	</cffunction>
+
 	<!--- PUBLIC METHODS --->
 
 	<cffunction name="getCharacter" returntype="struct" access="public" output="false">
