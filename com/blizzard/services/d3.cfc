@@ -26,6 +26,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 	<!--- PRIVATE METHODS --->
 	
+	<cffunction name="getServiceEndpoint" returntype="string" access="private" output="false">
+	
+		<cfreturn super.getServiceEndpoint() & '/d3' />
+	</cffunction>
+	
 	<!--- PUBLIC METHODS --->
 	
 	<cffunction name="getCareer" returntype="struct" access="public" output="false">
@@ -41,9 +46,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 	</cffunction>
 	
 	<cffunction name="getItem" returntype="struct" access="public" output="false">
-		<!--- HANZO: TODO: all explicit args --->	
+		<cfargument name="itemId" type="string" requird="true" />
 	
-		<!--- HANZO: FIXME: currently will conflict with wow.item --->
 		<cfreturn variables.factory.getRequest('Item', arguments).getResult() />	
 	</cffunction>
 	
