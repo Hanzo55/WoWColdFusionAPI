@@ -26,7 +26,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 	<!--- INIT --->
 	
-	<cffunction name="init" returntype="wow" access="public" output="false">
+	<cffunction name="init" returntype="community_platform" access="public" output="false">
 		<cfargument name="cache" type="any" required="true" />
 		<cfargument name="region" type="string" required="false" default="us" />
 		<cfargument name="publicKey" type="string" required="false" default="" />
@@ -120,6 +120,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 	
 	<!--- PRIVATE METHODS --->
 	
+	<cffunction name="getServiceEndpoint" returntype="string" access="private" output="false">
+	
+		<cfreturn '/api' />
+	</cffunction>
+	
 	<cffunction name="getFactoryInitializer" returntype="struct" access="private" output="false">
 		<cfargument name="cache" type="any" required="true" />
 	
@@ -129,8 +134,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfset settings.privateKey 		= getPrivateKey() />
 		<cfset settings.bnet_host 		= getBnetHost() />
 		<cfset settings.bnet_protocol 	= getBnetProtocol() />
+		<cfset settings.endpoint		= getServiceEndpoint() />
 		
-		<cfset settings.cache = arguments.cache />		
+		<cfset settings.cache 			= arguments.cache />		
 	
 		<cfreturn settings />
 	</cffunction>
