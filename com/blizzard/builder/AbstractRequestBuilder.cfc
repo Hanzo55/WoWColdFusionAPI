@@ -3,10 +3,13 @@
 	<cffunction name="init" returntype="AbstractRequestBuilder" access="public" output="false">
 		<cfargument name="bnet_host" type="string" required="true" />
 		<cfargument name="bnet_protocol" type="string" required="true" />
+		<cfargument name="endpoint" type="string" required="true" />
 	
-		<cfset variables.bnet_host = arguments.bnet_host />
-		<cfset variables.bnet_protocol = arguments.bnet_protocol />
-		<cfset variables.util = CreateObject('component','com.hanzo.util.bnet') />
+		<cfset variables.bnet_host 		= arguments.bnet_host />
+		<cfset variables.bnet_protocol 	= arguments.bnet_protocol />
+		<cfset variables.endpoint 		= arguments.endpoint />
+
+		<cfset variables.util 			= CreateObject('component','com.hanzo.util.bnet') />
 	
 		<cfreturn this />
 	</cffunction>
@@ -19,6 +22,11 @@
 	<cffunction name="getBnetProtocol" returntype="string" access="public" output="false">
 	
 		<cfreturn variables.bnet_protocol />
+	</cffunction>
+	
+	<cffunction name="getEndpoint" returntype="string" access="public" output="false">
+	
+		<cfreturn variables.endpoint />
 	</cffunction>
 
 	<cffunction name="getPublicKey" returntype="string" access="public" output="false">
