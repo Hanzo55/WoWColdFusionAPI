@@ -3,12 +3,14 @@
 	<cffunction name="init" returntype="RequestFactory" access="public" output="false">
 		<cfargument name="bnet_host" type="string" required="true" />
 		<cfargument name="bnet_protocol" type="string" required="true" />
+		<cfargument name="endpoint" type="string" required="true" />
 		<cfargument name="publicKey" type="string" required="true" />
 		<cfargument name="privateKey" type="string" required="true" />	
 		<cfargument name="cache" type="struct" required="true" />	
 
 		<cfset variables.bnet_host 			= arguments.bnet_host />
 		<cfset variables.bnet_protocol 		= arguments.bnet_protocol />
+		<cfset variables.endpoint			= arguments.endpoint />
 		<cfset variables.publicKey 			= arguments.publicKey />
 		<cfset variables.privateKey 		= arguments.privateKey />
 		<cfset variables.cache 				= arguments.cache />
@@ -21,7 +23,7 @@
 		addBuilder('com.blizzard.builder.RealmsRequestBuilder');
 		addBuilder('com.blizzard.builder.GuildRequestBuilder');
 		addBuilder('com.blizzard.builder.AuctionHouseRequestBuilder');
-		addBuilder('com.blizzard.builder.AuctionHouseDataRequestBuilder');		
+		addBuilder('com.blizzard.builder.AuctionHouseDataRequestBuilder');
 		addBuilder('com.blizzard.builder.ItemRequestBuilder');
 		addBuilder('com.blizzard.builder.ArenaInfoRequestBuilder');
 		addBuilder('com.blizzard.builder.QuestInfoRequestBuilder');
@@ -45,7 +47,7 @@
 		<cfargument name="builder_name" type="string" required="true" />
 	
 		<cfset variables.builder['#ListLast(arguments.builder_name,'.')#'] = CreateObject('component','#arguments.builder_name#').init(
-				variables.bnet_host, variables.bnet_protocol
+				variables.bnet_host, variables.bnet_protocol, variables.endpoint
 			) />
 		<cfset variables.builder['#ListLast(arguments.builder_name,'.')#'].addAuthenticationSettings(variables.publicKey, variables.privateKey) />
 		<cfset variables.builder['#ListLast(arguments.builder_name,'.')#'].addCache(variables.cache) />
