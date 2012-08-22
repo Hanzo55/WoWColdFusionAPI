@@ -34,6 +34,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfargument name="useSSL" type="boolean" required="false" default="#iif((Len(arguments.publicKey) GT 0 AND Len(arguments.privateKey) GT 0),de('true'),de('false'))#" />
 		
 		<cfscript>
+			<cfset variables.factory = StructNew() />			
+			
 			// BASIC PROPERTIES
 			setRegion(arguments.region);
 			setPublicKey(arguments.publicKey);
@@ -41,10 +43,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 			setUseSSL(arguments.useSSL);
 			setBnetProtocol( iif(useBnetSSL(),de('https://'),de('http://')) );	//we'll use the value of useSSL() to default it, but user can change later if needed
 			
-			// FACTORY
-			variables.factory = CreateObject('component','com.blizzard.factory.RequestFactory').init(
-				argumentCollection=getFactoryInitializer(arguments.cache)
-			);
+			constructFactory();
 		</cfscript>
 		
 		<cfreturn this />
@@ -119,6 +118,11 @@ OTHER DEALINGS IN THE SOFTWARE.
 	</cffunction>
 	
 	<!--- PRIVATE METHODS --->
+	
+	<cffunction name="constructFactory" returntype="void" access="private" output="false">
+	
+		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="constructFactory() is not implemented. This method must be implemented in a subclass." />			
+	</cffunction>
 	
 	<cffunction name="getApiUri" returntype="string" access="private" output="false">
 	
