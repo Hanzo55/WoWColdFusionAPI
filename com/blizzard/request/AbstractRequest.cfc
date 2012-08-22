@@ -145,15 +145,15 @@
 		</cfif>
 	</cffunction>
 
-	<cffunction name="setBaseEndpoint" returntype="void" access="public" output="false">
-		<cfargument name="baseEndpoint" type="string" required="true" />
+	<cffunction name="setGlobalIdentifier" returntype="void" access="public" output="false">
+		<cfargument name="gi" type="string" required="true" />
 	
-		<cfset variables.baseEndpoint = arguments.baseEndpoint />
+		<cfset variables.gi = arguments.gi />
 	</cffunction>
 	
-	<cffunction name="getBaseEndpoint" returntype="string" access="private" output="false">
+	<cffunction name="getGlobalIdentifier" returntype="string" access="private" output="false">
 
-		<cfreturn variables.baseEndpoint />
+		<cfreturn variables.gi />
 	</cffunction>
 
 	<!--- PRIVATE METHODS --->
@@ -275,14 +275,13 @@
 	</cffunction>
 
 	<cffunction name="sendRequest" returntype="void" access="private" output="false">
-		<cfargument name="absUrl" type="string" request="true" />
 
 		<cfset var data = 0 />
 		<cfset var error = 0 />
 
 		<cfset resetResponse() />
 
-		<cfset setRequestUrl(getBaseEndpoint()) />
+		<cfset setRequestUrl(getGlobalIdentifier()) />
 		
 		<cfset setHeader('Date', date_RFC1129()) />
 		
@@ -441,7 +440,7 @@
 	
 	<cffunction name="getResult" returntype="struct" access="public" output="false">
 
-		<cfset sendRequest(getBaseEndpoint()) />	
+		<cfset sendRequest() />	
 	
 		<cfreturn getResponse() />
 	</cffunction>
