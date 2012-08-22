@@ -9,7 +9,7 @@
 		addBuilder('com.blizzard.builder.GuildRequestBuilder');
 		addBuilder('com.blizzard.builder.AuctionHouseRequestBuilder');
 		addBuilder('com.blizzard.builder.AuctionHouseDataRequestBuilder');
-		addBuilder('com.blizzard.builder.ItemRequestBuilder');
+		addBuilder('com.blizzard.builder.wow.ItemRequestBuilder');
 		addBuilder('com.blizzard.builder.ArenaInfoRequestBuilder');
 		addBuilder('com.blizzard.builder.QuestInfoRequestBuilder');
 		addBuilder('com.blizzard.builder.CharacterRacesRequestBuilder');
