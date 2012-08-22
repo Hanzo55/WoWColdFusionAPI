@@ -1,15 +1,8 @@
 <cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
 
-	<cffunction name="init" returntype="AuctionHouseDataRequest" access="public" output="false">
-
-		<cfreturn super.init(argumentCollection=arguments) />
-	</cffunction>
-
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('data') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('data') ) />
 	</cffunction>
 
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">
