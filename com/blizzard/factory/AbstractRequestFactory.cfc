@@ -1,6 +1,6 @@
 <cfcomponent output="false">
 
-	<cffunction name="init" returntype="RequestFactory" access="public" output="false">
+	<cffunction name="init" returntype="AbstractRequestFactory" access="public" output="false">
 		<cfargument name="bnet_host" type="string" required="true" />
 		<cfargument name="bnet_protocol" type="string" required="true" />
 		<cfargument name="endpoint" type="string" required="true" />
@@ -17,29 +17,8 @@
 
 		<cfset variables.builder 			= StructNew() />
 
-		<cfscript>
-		// ADD BUILDERS
-		addBuilder('com.blizzard.builder.CharacterRequestBuilder');
-		addBuilder('com.blizzard.builder.RealmsRequestBuilder');
-		addBuilder('com.blizzard.builder.GuildRequestBuilder');
-		addBuilder('com.blizzard.builder.AuctionHouseRequestBuilder');
-		addBuilder('com.blizzard.builder.AuctionHouseDataRequestBuilder');
-		addBuilder('com.blizzard.builder.ItemRequestBuilder');
-		addBuilder('com.blizzard.builder.ArenaInfoRequestBuilder');
-		addBuilder('com.blizzard.builder.QuestInfoRequestBuilder');
-		addBuilder('com.blizzard.builder.CharacterRacesRequestBuilder');
-		addBuilder('com.blizzard.builder.CharacterClassesRequestBuilder');			
-		addBuilder('com.blizzard.builder.GuildRewardsRequestBuilder');			
-		addBuilder('com.blizzard.builder.GuildPerksRequestBuilder');				
-		addBuilder('com.blizzard.builder.BattlegroupsRequestBuilder');				
-		addBuilder('com.blizzard.builder.CharacterAchievementsRequestBuilder');			
-		addBuilder('com.blizzard.builder.GuildAchievementsRequestBuilder');
-		addBuilder('com.blizzard.builder.RecipeRequestBuilder');
-		
-		// ADD. Circular Reference for AH Data
-		getBuilder('AuctionHouseRequestBuilder').setDataFactory(this);
-		</cfscript>		
-	
+		<cfset constructBuilders() />
+
 		<cfreturn this />
 	</cffunction>
 	
@@ -68,6 +47,11 @@
 		<cfset var requestObject = getBuilder(builder_name) />
 		
 		<cfreturn requestObject.constructRequestObject(argumentCollection=arguments.parameters) />
+	</cffunction>
+	
+	<cffunction name="constructBuilders" returntype="void" access="public" output="false">
+	
+		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="constructBuilders() is not implemented. This method must be implemented in a subclass." />	
 	</cffunction>
 
 </cfcomponent>
