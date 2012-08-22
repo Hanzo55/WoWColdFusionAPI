@@ -1,17 +1,13 @@
 <cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
 
-	<cffunction name="init" returntype="ArenaInfoRequest" access="public" output="false">
-
-		<cfset setEndpoint('/api/wow/pvp/arena') />
-
-		<cfreturn super.init(argumentCollection=arguments) />
+	<cffunction name="getRequestEndpoint" returntype="string" access="public" output="false">
+	
+		<cfreturn '/pvp/arena' />
 	</cffunction>
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('pvp') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('pvp') ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">
