@@ -10,7 +10,7 @@
 	
 		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.AuctionHouseRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 		<cfset var ri 		= reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.realm ) />
-		<cfset var absUrl	= getBaseUri() & ri />
+		<cfset var absUrl	= getBaseUrl() & ri />
 		
 		<cfset reqObj.setDataFactory( variables.data_factory ) />
 

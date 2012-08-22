@@ -13,7 +13,7 @@
 		<cfset reqObj 			= CreateObject( 'component', 'com.blizzard.decorator.LastModifiedCleaner' ).init( reqObj ) />	
 
 		<cfset ri 				= reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.realm ) & '/' & arguments.name />
-		<cfset absUrl 			= getBaseUri() & ri />
+		<cfset absUrl 			= getBaseUrl() & ri />
 
 		<cfset StructDelete( args, 'realm' ) />
 		<cfset StructDelete( args, 'name' ) />

@@ -4,7 +4,7 @@
 	
 		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.ArenaInfoRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 		<cfset var ri		= reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.battlegroup ) & '/' & ( arguments.team_type ) />
-		<cfset var absUrl 	= getBaseUri() & ri />
+		<cfset var absUrl 	= getBaseUrl() & ri />
 		
 		<cfif StructKeyExists( arguments, 'size' ) AND ( arguments.size )>
 			<cfset absUrl = absUrl & '?size=' & arguments.size />		

@@ -4,7 +4,7 @@
 	
 		<cfset var reqObj	= CreateObject( 'component', 'com.blizzard.request.ItemRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 		<cfset var ri 		= reqObj.getResourceIdentifier() & '/' & arguments.itemId />
-		<cfset var absUrl 	= getBaseUri() & ri />
+		<cfset var absUrl 	= getBaseUrl() & ri />
 		
 		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		

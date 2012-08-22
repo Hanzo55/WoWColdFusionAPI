@@ -4,7 +4,7 @@
 	
 		<cfset var reqObj	= CreateObject( 'component', 'com.blizzard.request.CharacterAchievementsRequest' ).init( getPublicKey(), getPrivateKey(), getreqObjche() ) />
 		<cfset var ri 		= reqObj.getResourceIdentifier() />
-		<cfset var absUrl 	= getBaseUri() & ri />		
+		<cfset var absUrl 	= getBaseUrl() & ri />		
 		
 		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		

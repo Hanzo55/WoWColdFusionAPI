@@ -63,7 +63,7 @@
 		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="constructRequestObject() is not implemented. This method must be implemented in a subclass." />	
 	</cffunction>
 
-	<cffunction name="getBaseUri" returntype="string" access="public" output="false">
+	<cffunction name="getBaseUrl" returntype="string" access="public" output="false">
 	
 		<cfreturn getBnetProtocol() & getBnetHost() & getEndpoint() />
 	</cffunction>

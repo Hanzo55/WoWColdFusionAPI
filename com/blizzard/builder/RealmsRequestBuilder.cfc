@@ -6,7 +6,7 @@
 		<cfset var realmList 	= '' />	
 		<cfset var reqObj 		= CreateObject( 'component', 'com.blizzard.request.RealmRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 
-		<cfset var absUrl = getBaseUri() & reqObj.getResourceIdentifier() />
+		<cfset var absUrl = getBaseUrl() & reqObj.getResourceIdentifier() />
 
 		<cfif StructKeyExists( arguments, 'name' ) AND Len( arguments.name )>
 			<cfloop list="#arguments.name#" index="thisRealm">
