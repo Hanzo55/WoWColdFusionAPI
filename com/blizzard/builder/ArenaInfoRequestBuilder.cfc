@@ -2,17 +2,17 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
-		<cfset var arena_info 	= CreateObject( 'component', 'com.blizzard.request.ArenaInfoRequest ').init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var baseUrl 		= arena_info.getRequestEndpoint() & '/' & variables.util.nameToSlug( arguments.battlegroup ) & '/' & ( arguments.team_type ) />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & getEndpoint() & baseUrl />
+		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.ArenaInfoRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset var ri		= reqObj.getRequestEndpoint() & '/' & variables.util.nameToSlug( arguments.battlegroup ) & '/' & ( arguments.team_type ) />
+		<cfset var absUrl 	= getBaseUri() & ri />
 		
 		<cfif StructKeyExists( arguments, 'size' ) AND ( arguments.size )>
-			<cfset baseEndpoint = baseEndpoint & '?size=' & arguments.size />		
+			<cfset absUrl = absUrl & '?size=' & arguments.size />		
 		</cfif>		
 		
-		<cfset arena_info.setBaseEndpoint( baseEndpoint ) />
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfreturn arena_info />		
+		<cfreturn reqObj />		
 	</cffunction>
 	
 </cfcomponent>

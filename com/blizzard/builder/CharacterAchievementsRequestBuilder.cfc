@@ -2,13 +2,13 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
-		<cfset var ca 			= CreateObject( 'component', 'com.blizzard.request.CharacterAchievementsRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var baseUrl 		= ca.getRequestEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & getEndpoint() & baseUrl />		
+		<cfset var reqObj	= CreateObject( 'component', 'com.blizzard.request.CharacterAchievementsRequest' ).init( getPublicKey(), getPrivateKey(), getreqObjche() ) />
+		<cfset var ri 		= reqObj.getRequestEndpoint() />
+		<cfset var absUrl 	= getBaseUri() & ri />		
 		
-		<cfset ca.setBaseEndpoint( baseEndpoint ) />
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfreturn ca />
+		<cfreturn reqObj />
 	</cffunction>
 	
 </cfcomponent>

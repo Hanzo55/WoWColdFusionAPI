@@ -2,13 +2,13 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
-		<cfset var quest_info 	= CreateObject( 'component', 'com.blizzard.request.QuestInfoRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var baseUrl 		= quest_info.getRequestEndpoint() & '/' & ( arguments.questId ) />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & getEndpoint() & baseUrl />
+		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.QuestInfoRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset var ri 		= reqObj.getRequestEndpoint() & '/' & ( arguments.questId ) />
+		<cfset var absUrl 	= getBaseUri() & ri />
 		
-		<cfset quest_info.setBaseEndpoint( baseEndpoint ) />
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfreturn quest_info />
+		<cfreturn reqObj />
 	</cffunction>
 	
 </cfcomponent>

@@ -2,13 +2,13 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
-		<cfset var char_classes	= CreateObject( 'component', 'com.blizzard.request.CharacterClassesRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var baseUrl 		= char_classes.getRequestEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & getEndpoint() & baseUrl />	
+		<cfset var reqObj	= CreateObject( 'component', 'com.blizzard.request.CharacterClassesRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset var ri 		= reqObj.getRequestEndpoint() />
+		<cfset var absUrl 	= getBaseUri() & ri />	
 		
-		<cfset char_classes.setBaseEndpoint( baseEndpoint ) />
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfreturn char_classes />
+		<cfreturn reqObj />
 	</cffunction>
 	
 </cfcomponent>

@@ -2,18 +2,18 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 
-		<cfset var fields 		= '' />
 		<cfset var args 		= arguments />
-		<cfset var baseUrl 		= '' />
-		<cfset var baseEndpoint = '' />
+		<cfset var fields 		= '' />
+		<cfset var ri 			= '' />
+		<cfset var absUrl 		= '' />
 		<cfset var sortedKeys 	= '' />
 		<cfset var arg 			= '' />		
 		
-		<cfset var character 	= CreateObject( 'component', 'com.blizzard.request.CharacterRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset character 		= CreateObject( 'component', 'com.blizzard.decorator.LastModifiedCleaner' ).init( character ) />	
+		<cfset var reqObj 		= CreateObject( 'component', 'com.blizzard.request.CharacterRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset reqObj 			= CreateObject( 'component', 'com.blizzard.decorator.LastModifiedCleaner' ).init( reqObj ) />	
 
-		<cfset baseUrl = character.getRequestEndpoint() & '/' & variables.util.nameToSlug( arguments.realm ) & '/' & arguments.name />
-		<cfset baseEndpoint = getBnetProtocol() & getBnetHost() & getEndpoint() & baseUrl />
+		<cfset ri 				= reqObj.getRequestEndpoint() & '/' & variables.util.nameToSlug( arguments.realm ) & '/' & arguments.name />
+		<cfset absUrl 			= getBaseUri() & ri />
 
 		<cfset StructDelete( args, 'realm' ) />
 		<cfset StructDelete( args, 'name' ) />
@@ -28,7 +28,7 @@
 
 				<!--- decorate further if achievements are involved --->
 				<cfif NOT CompareNoCase( LCase( arg ), 'achievements' )>
-					<cfset character = CreateObject( 'component', 'com.blizzard.decorator.AchievementCleaner' ).init( character ) />
+					<cfset reqObj = CreateObject( 'component', 'com.blizzard.decorator.AchievementCleaner' ).init( reqObj ) />
 				</cfif>
 
 			</cfif>
@@ -36,12 +36,12 @@
 		</cfloop>
 
 		<cfif Len( fields )>
-			<cfset baseEndpoint = baseEndpoint & '?fields=' & fields />		
+			<cfset absUrl = absUrl & '?fields=' & fields />		
 		</cfif>
 
-		<cfset character.setBaseEndpoint( baseEndpoint ) />
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfreturn character />
+		<cfreturn reqObj />
 	</cffunction>
 
 </cfcomponent>

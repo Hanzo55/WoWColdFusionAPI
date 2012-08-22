@@ -4,21 +4,21 @@
 	
 		<cfset var thisRealm 	= '' />
 		<cfset var realmList 	= '' />	
-		<cfset var realms 		= CreateObject( 'component', 'com.blizzard.request.RealmRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset var reqObj 		= CreateObject( 'component', 'com.blizzard.request.RealmRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & getEndpoint() & realms.getRequestEndpoint() />
+		<cfset var absUrl = getBaseUri() & reqObj.getRequestEndpoint() />
 
 		<cfif StructKeyExists( arguments, 'name' ) AND Len( arguments.name )>
 			<cfloop list="#arguments.name#" index="thisRealm">
 				<cfset realmList = ListAppend( realmList, variables.util.nameToSlug( Trim( thisRealm ) ) ) />
 			</cfloop>
 
-			<cfset baseEndpoint = baseEndpoint & '?realms=' & realmList />
+			<cfset absUrl = absUrl & '?realms=' & realmList />
 		</cfif>
 		
-		<cfset realms.setBaseEndpoint( baseEndpoint ) />
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfreturn realms />
+		<cfreturn reqObj />
 	</cffunction>
 	
 </cfcomponent>

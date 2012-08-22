@@ -2,13 +2,13 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
-		<cfset var guild_rw 	= CreateObject( 'component', 'com.blizzard.request.GuildRewardsRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var baseUrl 		= guild_rw.getRequestEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & getEndpoint() & baseUrl />		
+		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.GuildRewardsRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset var ri 		= reqObj.getRequestEndpoint() />
+		<cfset var absUrl 	= getBaseUri() & ri />		
 		
-		<cfset guild_rw.setBaseEndpoint( baseEndpoint ) />
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfreturn guild_rw />
+		<cfreturn reqObj />
 	</cffunction>
 	
 </cfcomponent>

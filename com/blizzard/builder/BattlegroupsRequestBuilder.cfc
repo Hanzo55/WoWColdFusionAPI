@@ -2,13 +2,13 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
-		<cfset var battlegroups = CreateObject( 'component', 'com.blizzard.request.BattlegroupsRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var baseUrl 		= battlegroups.getRequestEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & getEndpoint() & baseUrl />			
+		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.BattlegroupsRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset var ri 		= reqObj.getRequestEndpoint() />
+		<cfset var absUrl 	= getBaseUri() & ri />			
 		
-		<cfset battlegroups.setBaseEndpoint( baseEndpoint ) />
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfreturn battlegroups />
+		<cfreturn reqObj />
 	</cffunction>
 	
 </cfcomponent>
