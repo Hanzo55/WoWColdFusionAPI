@@ -59,7 +59,8 @@
 	</cffunction>
 
 	<cffunction name="constructRequestObject" returntype="void" access="public" output="false">
-	
+
+		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="constructRequestObject() is not implemented. This method must be implemented in a subclass." />	
 	</cffunction>
 
 	<cffunction name="getBaseUri" returntype="string" access="public" output="false">
