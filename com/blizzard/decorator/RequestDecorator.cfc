@@ -43,9 +43,9 @@
 		<cfreturn getDecorated().getPrivateKey() />
 	</cffunction>
 
-	<cffunction name="getEndpoint" returntype="string" access="public" output="false">
+	<cffunction name="getRequestEndpoint" returntype="string" access="public" output="false">
 	
-		<cfreturn getDecorated().getEndpoint() />
+		<cfreturn getDecorated().getRequestEndpoint() />
 	</cffunction>
 	
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
