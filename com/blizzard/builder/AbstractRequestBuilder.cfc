@@ -62,4 +62,9 @@
 	
 	</cffunction>
 
+	<cffunction name="getBaseUri" returntype="string" access="public" output="false">
+	
+		<cfreturn getBnetProtocol() & getBnetHost() & getEndpoint() />
+	</cffunction>
+
 </cfcomponent>
