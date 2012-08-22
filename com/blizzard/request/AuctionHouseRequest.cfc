@@ -2,12 +2,15 @@
 
 	<cffunction name="init" returntype="AuctionHouseRequest" access="public" output="false">
 
-		<cfset setEndpoint('/api/wow/auction/data') />
-		
 		<cfset variables.data_factory = '' />
 		
 		<cfreturn super.init(argumentCollection=arguments) />
 	</cffunction>
+	
+	<cffunction name="getRequestEndpoint" returntype="string" access="public" output="false">
+	
+		<cfreturn '/auction/data' />
+	</cffunction>	
 
 	<cffunction name="setDataFactory" returntype="void" access="public" output="false">
 		<cfargument name="data_factory" type="com.blizzard.factory.RequestFactory" required="true" />
@@ -17,9 +20,7 @@
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('auctionHouse') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('auctionHouse') ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">

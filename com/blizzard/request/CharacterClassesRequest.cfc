@@ -1,17 +1,13 @@
 <cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
 
-	<cffunction name="init" returntype="CharacterClassesRequest" access="public" output="false">
-
-		<cfset setEndpoint('/api/wow/data/character/classes') />
-		
-		<cfreturn super.init(argumentCollection=arguments) />
+	<cffunction name="getRequestEndpoint" returntype="string" access="public" output="false">
+	
+		<cfreturn '/data/character/classes' />
 	</cffunction>
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('classes') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('classes') ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">

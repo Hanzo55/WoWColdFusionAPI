@@ -1,17 +1,13 @@
 <cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
 
-	<cffunction name="init" returntype="RecipeRequest" access="public" output="false">
-
-		<cfset setEndpoint('/api/wow/recipe') />
-		
-		<cfreturn super.init(argumentCollection=arguments) />
+	<cffunction name="getRequestEndpoint" returntype="string" access="public" output="false">
+	
+		<cfreturn '/recipe' />
 	</cffunction>
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('recipe') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('recipe') ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">
