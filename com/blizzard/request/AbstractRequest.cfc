@@ -66,12 +66,6 @@
 		<cfreturn variables.privateKey />
 	</cffunction>
 
-	<cffunction name="setEndpoint" returntype="void" access="public" output="false">
-		<cfargument name="endpoint" type="string" required="true" />
-		
-		<cfset variables.endpoint = arguments.endpoint />
-	</cffunction>
-
 	<cffunction name="getEndpoint" returntype="string" access="public" output="false">
 
 		<cfreturn variables.endpoint />
