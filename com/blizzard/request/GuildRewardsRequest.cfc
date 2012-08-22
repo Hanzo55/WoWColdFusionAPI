@@ -1,4 +1,4 @@
-<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
+<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest">
 
 	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
 	

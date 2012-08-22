@@ -1,4 +1,4 @@
-<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
+<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest">
 
 	<cffunction name="init" returntype="AuctionHouseRequest" access="public" output="false">
 
