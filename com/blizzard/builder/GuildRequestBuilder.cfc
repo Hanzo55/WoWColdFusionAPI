@@ -12,7 +12,7 @@
 		<cfset var reqObj = CreateObject( 'component', 'com.blizzard.request.GuildRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 		<cfset reqObj = CreateObject( 'component', 'com.blizzard.decorator.LastModifiedCleaner' ).init( reqObj ) />
 		
-		<cfset ri = reqObj.getRequestEndpoint() & '/' & variables.util.nameToSlug( arguments.realm ) & '/' & UrlEncodedFormat( arguments.name ) />
+		<cfset ri = reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.realm ) & '/' & UrlEncodedFormat( arguments.name ) />
 		<cfset absUrl = getBaseUri() & ri />		
 
 		<cfset StructDelete( args, 'realm' ) />

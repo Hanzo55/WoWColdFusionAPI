@@ -9,7 +9,7 @@
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
 		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.AuctionHouseRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var ri 		= reqObj.getRequestEndpoint() & '/' & variables.util.nameToSlug( arguments.realm ) />
+		<cfset var ri 		= reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.realm ) />
 		<cfset var absUrl	= getBaseUri() & ri />
 		
 		<cfset reqObj.setDataFactory( variables.data_factory ) />

@@ -7,7 +7,7 @@
 		<cfreturn super.init(argumentCollection=arguments) />
 	</cffunction>
 	
-	<cffunction name="getRequestEndpoint" returntype="string" access="public" output="false">
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
 	
 		<cfreturn '/auction/data' />
 	</cffunction>	

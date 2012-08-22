@@ -1,6 +1,6 @@
 <cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
 
-	<cffunction name="getRequestEndpoint" returntype="string" access="public" output="false">
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
 	
 		<cfreturn '/item' />
 	</cffunction>

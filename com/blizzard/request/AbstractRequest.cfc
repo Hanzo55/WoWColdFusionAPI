@@ -66,9 +66,9 @@
 		<cfreturn variables.privateKey />
 	</cffunction>
 
-	<cffunction name="getRequestEndpoint" returntype="string" access="public" output="false">
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
 
-		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="getRequestEndpoint() is not implemented. This method must be implemented in a subclass." />
+		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="getResourceIdentifier() is not implemented. This method must be implemented in a subclass." />
 	</cffunction>
 
 	<cffunction name="setRequestUrl" returntype="void" access="public" output="false">

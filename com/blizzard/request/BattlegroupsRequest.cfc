@@ -1,6 +1,6 @@
 <cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
 
-	<cffunction name="getRequestEndpoint" returntype="string" access="public" output="false">
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
 	
 		<cfreturn '/data/battlegroups/' />	<!--- the trailing slash is required for this one, with the intent that filters will be added in the future (ie. /battlegroups/ruin) --->
 	</cffunction>

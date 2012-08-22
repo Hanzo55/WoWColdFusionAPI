@@ -3,7 +3,7 @@
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
 		<cfset var reqObj	= CreateObject( 'component', 'com.blizzard.request.CharacterClassesRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var ri 		= reqObj.getRequestEndpoint() />
+		<cfset var ri 		= reqObj.getResourceIdentifier() />
 		<cfset var absUrl 	= getBaseUri() & ri />	
 		
 		<cfset reqObj.setGlobalIdentifier( absUrl ) />
