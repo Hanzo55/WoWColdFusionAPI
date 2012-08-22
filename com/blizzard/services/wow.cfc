@@ -26,6 +26,13 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 	<!--- PRIVATE METHODS --->
 	
+	<cffunction name="constructFactory" returntype="void" access="private" output="false">
+
+		<cfset variables.factory = CreateObject( 'component', 'com.blizzard.factory.WoWRequestFactory' ).init(
+				argumentCollection=getFactoryInitializer( arguments.cache )
+			) />
+	</cffunction>
+	
 	<cffunction name="getRealmStruct" returntype="struct" access="private" output="false">
 		<cfargument name="name" type="string" required="false" default="" hint="the fully formatted name of the realm" />
 		<cfargument name="slug" type="string" required="false" default="" hint="'data-friendly' version of the name; punctuation removed and spaces converted to dashes" />

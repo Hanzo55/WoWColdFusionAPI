@@ -26,6 +26,13 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 	<!--- PRIVATE METHODS --->
 	
+	<cffunction name="constructFactory" returntype="void" access="private" output="false">
+
+		<cfset variables.factory = CreateObject( 'component', 'com.blizzard.factory.D3RequestFactory' ).init(
+				argumentCollection=getFactoryInitializer( arguments.cache )
+			) />
+	</cffunction>	
+	
 	<cffunction name="getApiUri" returntype="string" access="private" output="false">
 	
 		<cfreturn super.getApiUri() & '/d3' />
