@@ -26,9 +26,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 	<!--- PRIVATE METHODS --->
 	
-	<cffunction name="getServiceEndpoint" returntype="string" access="private" output="false">
+	<cffunction name="getApiUri" returntype="string" access="private" output="false">
 	
-		<cfreturn super.getServiceEndpoint() & '/d3' />
+		<cfreturn super.getApiUri() & '/d3' />
 	</cffunction>
 	
 	<!--- PUBLIC METHODS --->

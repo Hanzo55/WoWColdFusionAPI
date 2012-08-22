@@ -44,9 +44,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfreturn rs />
 	</cffunction>
 
-	<cffunction name="getServiceEndpoint" returntype="string" access="private" output="false">
+	<cffunction name="getApiUri" returntype="string" access="private" output="false">
 	
-		<cfreturn super.getServiceEndpoint() & '/wow' />
+		<cfreturn super.getApiUri() & '/wow' />
 	</cffunction>
 
 	<!--- PUBLIC METHODS --->

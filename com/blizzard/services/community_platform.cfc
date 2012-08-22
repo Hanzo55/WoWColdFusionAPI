@@ -120,7 +120,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 	
 	<!--- PRIVATE METHODS --->
 	
-	<cffunction name="getServiceEndpoint" returntype="string" access="private" output="false">
+	<cffunction name="getApiUri" returntype="string" access="private" output="false">
 	
 		<cfreturn '/api' />
 	</cffunction>
@@ -134,7 +134,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfset settings.privateKey 		= getPrivateKey() />
 		<cfset settings.bnet_host 		= getBnetHost() />
 		<cfset settings.bnet_protocol 	= getBnetProtocol() />
-		<cfset settings.endpoint		= getServiceEndpoint() />
+		<cfset settings.endpoint		= getApiUri() />
 		
 		<cfset settings.cache 			= arguments.cache />		
 	
