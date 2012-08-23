@@ -14,7 +14,7 @@
 	<!--- INHERITED METHODS FROM BASE CLASS MADE AVAILABLE TO DECORATOR
 	
 	The following methods (below) are here as convenience, so you do not have to declare
-	them in your concrete decoraters; by being present here, they automatically delgate back
+	them in your concrete decorators; by being present here, they automatically delgate back
 	to the decorated object.
 	
 	As a result, by being present in this list below, they cannot be overridden in a decorator.
