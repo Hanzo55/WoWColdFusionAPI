@@ -2,11 +2,13 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
+		<cfset var absUrl		= '' />
 		<cfset var thisRealm 	= '' />
 		<cfset var realmList 	= '' />	
 		<cfset var reqObj 		= CreateObject( 'component', 'com.blizzard.request.RealmRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset reqObj			= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />		
 
-		<cfset var absUrl = getBaseUrl() & reqObj.getResourceIdentifier() />
+		<cfset absUrl 			= getBaseUrl() & reqObj.getResourceIdentifier() />
 
 		<cfif StructKeyExists( arguments, 'name' ) AND Len( arguments.name )>
 			<cfloop list="#arguments.name#" index="thisRealm">

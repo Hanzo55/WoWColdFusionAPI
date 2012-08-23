@@ -9,7 +9,8 @@
 	
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
-		<cfset var ah_data = CreateObject( 'component', 'com.blizzard.request.AuctionHouseDataRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset var ah_data 	= CreateObject( 'component', 'com.blizzard.request.AuctionHouseDataRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset ah_data 		= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( ah_data ) />
 		
 		<cfset ah_data.setGlobalIdentifier( arguments.endPoint ) />
 		

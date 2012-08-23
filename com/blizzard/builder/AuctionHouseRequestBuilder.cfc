@@ -8,9 +8,14 @@
 	
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
+		<cfset var ri		= 0 />
+		<cfset var absUrl	= 0 />
+
 		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.AuctionHouseRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var ri 		= reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.realm ) />
-		<cfset var absUrl	= getBaseUrl() & ri />
+		<cfset reqObj		= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />		
+
+		<cfset ri 			= reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.realm ) />
+		<cfset absUrl		= getBaseUrl() & ri />
 		
 		<cfset reqObj.setDataFactory( variables.data_factory ) />
 

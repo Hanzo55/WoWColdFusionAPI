@@ -2,18 +2,19 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 
-		<cfset var args = arguments />	
-		<cfset var fields = '' />
-		<cfset var absUrl = '' />
-		<cfset var ri = '' />
-		<cfset var sortedKeys = '' />
-		<cfset var arg = '' />
+		<cfset var args 		= arguments />	
+		<cfset var fields 		= '' />
+		<cfset var absUrl 		= '' />
+		<cfset var ri 			= '' />
+		<cfset var sortedKeys 	= '' />
+		<cfset var arg 			= '' />
 
-		<cfset var reqObj = CreateObject( 'component', 'com.blizzard.request.GuildRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset reqObj = CreateObject( 'component', 'com.blizzard.decorator.LastModifiedCleaner' ).init( reqObj ) />
+		<cfset var reqObj 		= CreateObject( 'component', 'com.blizzard.request.GuildRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset reqObj 			= CreateObject( 'component', 'com.blizzard.decorator.LastModifiedCleaner' ).init( reqObj ) />
+		<cfset reqObj			= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />
 		
-		<cfset ri = reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.realm ) & '/' & UrlEncodedFormat( arguments.name ) />
-		<cfset absUrl = getBaseUrl() & ri />		
+		<cfset ri 				= reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.realm ) & '/' & UrlEncodedFormat( arguments.name ) />
+		<cfset absUrl 			= getBaseUrl() & ri />		
 
 		<cfset StructDelete( args, 'realm' ) />
 		<cfset StructDelete( args, 'name' ) />

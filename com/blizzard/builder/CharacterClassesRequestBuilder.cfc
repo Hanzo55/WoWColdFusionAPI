@@ -2,9 +2,14 @@
 
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
+		<cfset var ri 		= 0 />
+		<cfset var absUrl	= 0 />
+
 		<cfset var reqObj	= CreateObject( 'component', 'com.blizzard.request.CharacterClassesRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
-		<cfset var ri 		= reqObj.getResourceIdentifier() />
-		<cfset var absUrl 	= getBaseUrl() & ri />	
+		<cfset reqObj		= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />
+				
+		<cfset ri 			= reqObj.getResourceIdentifier() />
+		<cfset absUrl 		= getBaseUrl() & ri />	
 		
 		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		

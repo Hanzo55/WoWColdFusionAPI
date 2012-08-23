@@ -11,6 +11,7 @@
 		
 		<cfset var reqObj 		= CreateObject( 'component', 'com.blizzard.request.CharacterRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 		<cfset reqObj 			= CreateObject( 'component', 'com.blizzard.decorator.LastModifiedCleaner' ).init( reqObj ) />	
+		<cfset reqObj			= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />
 
 		<cfset ri 				= reqObj.getResourceIdentifier() & '/' & variables.util.nameToSlug( arguments.realm ) & '/' & arguments.name />
 		<cfset absUrl 			= getBaseUrl() & ri />
