@@ -7,15 +7,17 @@
 		<cfargument name="publicKey" type="string" required="true" />
 		<cfargument name="privateKey" type="string" required="true" />	
 		<cfargument name="cache" type="struct" required="true" />	
+		<cfargument name="locale" type="string" required="true" />
 
 		<cfset variables.bnet_host 			= arguments.bnet_host />
-		<cfset variables.bnet_protocol 		= arguments.bnet_protocol />
+		<cfset variables.bnet_protocol 	= arguments.bnet_protocol />
 		<cfset variables.endpoint			= arguments.endpoint />
 		<cfset variables.publicKey 			= arguments.publicKey />
 		<cfset variables.privateKey 		= arguments.privateKey />
 		<cfset variables.cache 				= arguments.cache />
+		<cfset variables.locale					= arguments.locale />
 
-		<cfset variables.builder 			= StructNew() />
+		<cfset variables.builder 				= StructNew() />
 
 		<cfset constructBuilders() />
 
@@ -26,7 +28,7 @@
 		<cfargument name="builder_name" type="string" required="true" />
 	
 		<cfset variables.builder['#ListLast(arguments.builder_name,'.')#'] = CreateObject('component','#arguments.builder_name#').init(
-				variables.bnet_host, variables.bnet_protocol, variables.endpoint
+				variables.bnet_host, variables.bnet_protocol, variables.endpoint, variables.locale
 			) />
 		<cfset variables.builder['#ListLast(arguments.builder_name,'.')#'].addAuthenticationSettings(variables.publicKey, variables.privateKey) />
 		<cfset variables.builder['#ListLast(arguments.builder_name,'.')#'].addCache(variables.cache) />
