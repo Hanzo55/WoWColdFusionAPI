@@ -45,7 +45,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 			setUseSSL(arguments.useSSL);
 			setBnetProtocol( iif(useBnetSSL(),de('https://'),de('http://')) );	//we'll use the value of useSSL() to default it, but user can change later if needed
 			
-			constructFactory();
+			constructFactory( cache=arguments.cache );
 		</cfscript>
 		
 		<cfreturn this />
