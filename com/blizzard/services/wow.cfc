@@ -98,6 +98,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 	<cffunction name="getAuctionHouse" returntype="struct" access="public" output="false">
 		<cfargument name="realm" type="string" required="true" />
 
+		<cfif ListFind( 'cn,kr,tw', getRegion() )>
+			<cfthrow type="APINotImplemented" message="Auction House related APIs missing" detail="The region '#getRegion()#' does not support the Auction House Battle.net APIs." />
+		</cfif>
+
 		<cfreturn variables.factory.getRequest('AuctionHouse', arguments).getResult() />
 	</cffunction>
 
