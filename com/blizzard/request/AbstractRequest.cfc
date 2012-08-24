@@ -30,7 +30,26 @@
 		
 		<cfreturn this />
 	</cffunction>
+	
+	<!--- DEBUGGING --->
+	
+	<cffunction name="dump" returntype="struct" access="public" output="false">
 
+		<cfreturn variables />
+	</cffunction>
+	
+	<!--- ABSTRACT METHODS (here for convenience, in the absence of a true interface) --->
+	
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
+
+		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="getResourceIdentifier() is not implemented. This method must be implemented in a subclass." />
+	</cffunction>
+
+	<cffunction name="resetResponse" returntype="void" access="public" output="false">
+	
+		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="resetResponse() is not implemented. This method must be implemented in a subclass." />
+	</cffunction>	
+	
 	<!--- PROPERTIES --->
 
 	<cffunction name="setCache" returntype="void" access="public" output="false">
@@ -64,11 +83,6 @@
 	<cffunction name="getPrivateKey" returntype="string" access="public" output="false">
 		
 		<cfreturn variables.privateKey />
-	</cffunction>
-
-	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
-
-		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="getResourceIdentifier() is not implemented. This method must be implemented in a subclass." />
 	</cffunction>
 
 	<cffunction name="setRequestUrl" returntype="void" access="public" output="false">
@@ -151,7 +165,7 @@
 		<cfset variables.gi = arguments.gi />
 	</cffunction>
 	
-	<cffunction name="getGlobalIdentifier" returntype="string" access="private" output="false">
+	<cffunction name="getGlobalIdentifier" returntype="string" access="public" output="false">
 
 		<cfreturn variables.gi />
 	</cffunction>
