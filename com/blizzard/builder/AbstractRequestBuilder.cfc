@@ -4,12 +4,14 @@
 		<cfargument name="bnet_host" type="string" required="true" />
 		<cfargument name="bnet_protocol" type="string" required="true" />
 		<cfargument name="endpoint" type="string" required="true" />
-	
-		<cfset variables.bnet_host 		= arguments.bnet_host />
-		<cfset variables.bnet_protocol 	= arguments.bnet_protocol />
-		<cfset variables.endpoint 		= arguments.endpoint />
+		<cfargument name="locale" type="string" required="true" />
 
-		<cfset variables.util 			= CreateObject('component','com.hanzo.util.bnet') />
+		<cfset variables.bnet_host 			= arguments.bnet_host />
+		<cfset variables.bnet_protocol 	= arguments.bnet_protocol />
+		<cfset variables.endpoint 			= arguments.endpoint />
+		<cfset variables.locale					= arguments.locale />
+
+		<cfset variables.util 					= CreateObject('component','com.hanzo.util.bnet') />
 	
 		<cfreturn this />
 	</cffunction>
@@ -42,6 +44,11 @@
 	<cffunction name="getCache" returntype="struct" access="public" output="false">
 	
 		<cfreturn variables.cache />
+	</cffunction>
+	
+	<cffunction name="getLocalization" returntype="string" access="public" output="false">
+		
+		<cfreturn variables.locale />
 	</cffunction>
  
 	<cffunction name="addAuthenticationSettings" returntype="void" access="public" output="false">
