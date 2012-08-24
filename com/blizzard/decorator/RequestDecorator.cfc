@@ -106,4 +106,15 @@
 		<cfreturn getDecorated().getLocalization() />
 	</cffunction>
 	
+	<cffunction name="setDataFactory" returntype="void" access="public" output="false">
+		<cfargument name="df" type="any" required="true" />
+	
+		<cfset getDecorated().setDataFactory( arguments.df ) />	
+	</cffunction>
+	
+	<cffunction name="getDataFactory" returntype="any" access="public" output="false">
+	
+		<cfreturn getDecorated().getDataFactory() />	
+	</cffunction>	
+	
 </cfcomponent>
