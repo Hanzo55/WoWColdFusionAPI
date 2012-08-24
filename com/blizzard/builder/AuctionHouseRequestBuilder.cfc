@@ -1,7 +1,7 @@
 <cfcomponent output="false" extends="com.blizzard.builder.AbstractRequestBuilder">
 
 	<cffunction name="setDataFactory" returntype="void" access="public" output="false">
-		<cfargument name="data_factory" type="com.blizzard.factory.RequestFactory" required="true" />
+		<cfargument name="data_factory" type="com.blizzard.factory.AbstractRequestFactory" required="true" />
 	
 		<cfset variables.data_factory = arguments.data_factory />
 	</cffunction>
