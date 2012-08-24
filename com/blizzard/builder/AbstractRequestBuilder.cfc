@@ -75,4 +75,9 @@
 		<cfreturn getBnetProtocol() & getBnetHost() & getEndpoint() />
 	</cffunction>
 
+	<cffunction name="getDataFactory" returntype="any" access="public" output="false">
+	
+		<cfreturn variables.data_factory />
+	</cffunction>	
+
 </cfcomponent>
