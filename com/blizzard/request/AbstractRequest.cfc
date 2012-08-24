@@ -181,6 +181,17 @@
 		<cfreturn variables.locale />
 	</cffunction>
 
+	<cffunction name="setDataFactory" returntype="void" access="public" output="false">
+		<cfargument name="df" type="any" required="true" />
+	
+		<cfset variables.df = arguments.df />	
+	</cffunction>
+	
+	<cffunction name="getDataFactory" returntype="any" access="public" output="false">
+	
+		<cfreturn variables.df />	
+	</cffunction>
+
 	<!--- PRIVATE METHODS --->
 	
 	<cffunction name="cacheIsDirty" returntype="boolean" access="public" output="false">
