@@ -1,4 +1,4 @@
-<cfcomponent output="false">
+<cfcomponent output="false" extends="com.blizzard.factory.AbstractRequestFactory">
 
 	<cffunction name="constructBuilders" returntype="void" access="public" output="false">
 
