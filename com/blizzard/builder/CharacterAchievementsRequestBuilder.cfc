@@ -5,7 +5,7 @@
 		<cfset var ri		= 0 />
 		<cfset var absUrl	= 0 />
 	
-		<cfset var reqObj	= CreateObject( 'component', 'com.blizzard.request.CharacterAchievementsRequest' ).init( getPublicKey(), getPrivateKey(), getreqObjche() ) />
+		<cfset var reqObj	= CreateObject( 'component', 'com.blizzard.request.CharacterAchievementsRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 		<cfset reqObj		= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />		
 
 		<cfset ri 			= reqObj.getResourceIdentifier() />
