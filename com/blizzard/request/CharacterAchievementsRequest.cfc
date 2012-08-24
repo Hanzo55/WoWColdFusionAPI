@@ -7,7 +7,7 @@
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset setResponse( getResultStruct('character_achievements' ) />
+		<cfset setResponse( getResultStruct('character_achievements' ) ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">
