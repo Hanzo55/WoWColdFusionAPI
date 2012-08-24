@@ -281,7 +281,8 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfset settings.privateKey 		= getPrivateKey() />
 		<cfset settings.bnet_host 		= getBnetHost() />
 		<cfset settings.bnet_protocol 	= getBnetProtocol() />
-		<cfset settings.endpoint		= getApiUri() />
+		<cfset settings.endpoint			= getApiUri() />
+		<cfset settings.locale				= getLocalization() />
 		
 		<cfset settings.cache 			= arguments.cache />		
 	
