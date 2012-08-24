@@ -3,7 +3,7 @@
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
 		<cfset var absUrl		= '' />
-		<cfset var thisRealm 	= '' />
+		<cfset var thisRealm = '' />
 		<cfset var realmList 	= '' />	
 		<cfset var reqObj 		= CreateObject( 'component', 'com.blizzard.request.RealmRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 		<cfset reqObj			= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />		
@@ -18,6 +18,7 @@
 			<cfset absUrl = absUrl & '?realms=' & realmList />
 		</cfif>
 		
+		<cfset reqObj.setLocalization( getLocalization() ) />		
 		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
 		<cfreturn reqObj />
