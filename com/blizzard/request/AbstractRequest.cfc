@@ -170,6 +170,17 @@
 		<cfreturn variables.gi />
 	</cffunction>
 
+	<cffunction name="setLocalization" returntype="void" access="public" output="false">
+		<cfargument name="locale" type="string" required="true" />
+	
+		<cfset variables.locale = arguments.locale />
+	</cffunction>
+
+	<cffunction name="getLocalization" returntype="string" access="public" output="false">
+	
+		<cfreturn variables.locale />
+	</cffunction>
+
 	<!--- PRIVATE METHODS --->
 	
 	<cffunction name="cacheIsDirty" returntype="boolean" access="public" output="false">
