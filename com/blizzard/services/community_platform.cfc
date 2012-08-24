@@ -35,7 +35,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 		<cfargument name="useSSL" type="boolean" required="false" default="#iif((Len(arguments.publicKey) GT 0 AND Len(arguments.privateKey) GT 0),de('true'),de('false'))#" />
 		
 		<cfscript>
-			<cfset variables.factory 	= StructNew() />
+			variables.factory 	= StructNew();
 			
 			// BASIC PROPERTIES
 			setRegion(arguments.region);
@@ -149,7 +149,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 				<cfswitch expression="#arguments.locale#">
 
 					<cfcase value="en_US,es_MX,pt_BR">
-						<cfset variables.locale = arguments.local />
+						<cfset variables.locale = arguments.locale />
 					</cfcase>
 
 					<cfdefaultcase>
@@ -165,7 +165,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 				<cfswitch expression="#arguments.locale#">
 
 					<cfcase value="en_GB,es_ES,fr_FR,ru_RU,de_DE,pt_PT">
-						<cfset variables.locale = arguments.local />
+						<cfset variables.locale = arguments.locale />
 					</cfcase>
 
 					<cfdefaultcase>
@@ -181,7 +181,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 				<cfswitch expression="#arguments.locale#">
 
 					<cfcase value="ko_KR">
-						<cfset variables.locale = arguments.local />
+						<cfset variables.locale = arguments.locale />
 					</cfcase>
 
 					<cfdefaultcase>
@@ -197,7 +197,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 				<cfswitch expression="#arguments.locale#">
 
 					<cfcase value="zh_TW">
-						<cfset variables.locale = arguments.local />
+						<cfset variables.locale = arguments.locale />
 					</cfcase>
 
 					<cfdefaultcase>
@@ -213,7 +213,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 				<cfswitch expression="#arguments.locale#">
 
 					<cfcase value="zh_CN">
-						<cfset variables.locale = arguments.local />
+						<cfset variables.locale = arguments.locale />
 					</cfcase>
 
 					<cfdefaultcase>
