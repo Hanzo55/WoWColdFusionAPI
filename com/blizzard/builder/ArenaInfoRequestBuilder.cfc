@@ -15,6 +15,7 @@
 			<cfset absUrl = absUrl & '?size=' & arguments.size />		
 		</cfif>		
 		
+		<cfset reqObj.setLocalization( getLocalization() ) />		
 		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
 		<cfreturn reqObj />		

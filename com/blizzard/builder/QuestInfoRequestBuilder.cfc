@@ -10,7 +10,8 @@
 
 		<cfset ri 			= reqObj.getResourceIdentifier() & '/' & ( arguments.questId ) />
 		<cfset absUrl 		= getBaseUrl() & ri />
-		
+
+		<cfset reqObj.setLocalization( getLocalization() ) />		
 		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
 		<cfreturn reqObj />

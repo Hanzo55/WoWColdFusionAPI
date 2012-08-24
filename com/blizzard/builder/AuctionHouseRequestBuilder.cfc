@@ -19,6 +19,7 @@
 		
 		<cfset reqObj.setDataFactory( variables.data_factory ) />
 
+		<cfset reqObj.setLocalization( getLocalization() ) />
 		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
 		<cfreturn reqObj />

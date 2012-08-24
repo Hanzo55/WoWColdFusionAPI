@@ -40,6 +40,7 @@
 			<cfset absUrl = absUrl & '?fields=' & fields />		
 		</cfif>
 
+		<cfset reqObj.setLocalization( getLocalization() ) />
 		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
 		<cfreturn reqObj />
