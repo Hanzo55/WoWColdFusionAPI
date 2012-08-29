@@ -17,7 +17,8 @@
 		<cfset var arg = '' />		
 		
 		<cfset var character = CreateObject('component','com.blizzard.request.CharacterRequest').init(getPublicKey(), getPrivateKey(), getCache()) />
-		<cfset character = CreateObject('component','com.blizzard.decorator.LastModifiedCleaner').init(character) />	
+		<cfset character = CreateObject('component','com.blizzard.decorator.LastModifiedCleaner').init(character) />
+		<cfset character = CreateObject('component','com.blizzard.decorator.TalentCleaner').init(character) />		
 
 		<cfset baseUrl = character.getEndpoint() & '/' & variables.util.nameToSlug(arguments.realm) & '/' & arguments.name />
 		<cfset baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
