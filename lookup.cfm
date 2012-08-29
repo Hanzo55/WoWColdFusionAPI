@@ -1,5 +1,5 @@
 <cfscript>
-wow = CreateObject('component','com.blizzard.services.wow').init(cache=application.cache);
+wow = CreateObject('component','com.blizzard.services.wow').init(cache=application.cache,region='kr',locale='ko_KR');
 
 wow_cr = wow.getCharacterRaces();
 wow_cc = wow.getCharacterClasses();
