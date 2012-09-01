@@ -1,21 +1,20 @@
 <cfcomponent output="false" extends="com.blizzard.builder.AbstractRequestBuilder">
 
-	<cffunction name="init" returntype="BattlegroupsRequestBuilder" access="public" output="false">
-		<cfargument name="bnet_host" type="string" required="true" />
-		<cfargument name="bnet_protocol" type="string" required="true" />
-			
-		<cfreturn super.init(argumentCollection=arguments) />
-	</cffunction>
-	
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
+
+		<cfset var ri		= 0 />
+		<cfset var absUrl 	= 0 />
 	
-		<cfset var battlegroups = CreateObject('component','com.blizzard.request.BattlegroupsRequest').init(getPublicKey(), getPrivateKey(), getCache()) />
-		<cfset var baseUrl = battlegroups.getEndpoint() />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />			
+		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.BattlegroupsRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset reqObj		= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />		
+
+		<cfset ri 			= reqObj.getResourceIdentifier() />
+		<cfset absUrl 		= getBaseUrl() & ri />			
+
+		<cfset reqObj.setLocalization( getLocalization() ) />		
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfset battlegroups.setBaseEndpoint(baseEndpoint) />
-		
-		<cfreturn battlegroups />
+		<cfreturn reqObj />
 	</cffunction>
 	
 </cfcomponent>

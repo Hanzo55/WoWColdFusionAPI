@@ -30,7 +30,26 @@
 		
 		<cfreturn this />
 	</cffunction>
+	
+	<!--- DEBUGGING --->
+	
+	<cffunction name="dump" returntype="struct" access="public" output="false">
 
+		<cfreturn variables />
+	</cffunction>
+	
+	<!--- ABSTRACT METHODS (here for convenience, in the absence of a true interface) --->
+	
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
+
+		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="getResourceIdentifier() is not implemented. This method must be implemented in a subclass." />
+	</cffunction>
+
+	<cffunction name="resetResponse" returntype="void" access="public" output="false">
+	
+		<cfthrow type="MethodNotImplemented" message="Not Implemented" detail="resetResponse() is not implemented. This method must be implemented in a subclass." />
+	</cffunction>	
+	
 	<!--- PROPERTIES --->
 
 	<cffunction name="setCache" returntype="void" access="public" output="false">
@@ -64,17 +83,6 @@
 	<cffunction name="getPrivateKey" returntype="string" access="public" output="false">
 		
 		<cfreturn variables.privateKey />
-	</cffunction>
-
-	<cffunction name="setEndpoint" returntype="void" access="public" output="false">
-		<cfargument name="endpoint" type="string" required="true" />
-		
-		<cfset variables.endpoint = arguments.endpoint />
-	</cffunction>
-
-	<cffunction name="getEndpoint" returntype="string" access="public" output="false">
-
-		<cfreturn variables.endpoint />
 	</cffunction>
 
 	<cffunction name="setRequestUrl" returntype="void" access="public" output="false">
@@ -151,15 +159,37 @@
 		</cfif>
 	</cffunction>
 
-	<cffunction name="setBaseEndpoint" returntype="void" access="public" output="false">
-		<cfargument name="baseEndpoint" type="string" required="true" />
+	<cffunction name="setGlobalIdentifier" returntype="void" access="public" output="false">
+		<cfargument name="gi" type="string" required="true" />
 	
-		<cfset variables.baseEndpoint = arguments.baseEndpoint />
+		<cfset variables.gi = arguments.gi />
 	</cffunction>
 	
-	<cffunction name="getBaseEndpoint" returntype="string" access="private" output="false">
+	<cffunction name="getGlobalIdentifier" returntype="string" access="public" output="false">
 
-		<cfreturn variables.baseEndpoint />
+		<cfreturn variables.gi />
+	</cffunction>
+
+	<cffunction name="setLocalization" returntype="void" access="public" output="false">
+		<cfargument name="locale" type="string" required="true" />
+	
+		<cfset variables.locale = arguments.locale />
+	</cffunction>
+
+	<cffunction name="getLocalization" returntype="string" access="public" output="false">
+	
+		<cfreturn variables.locale />
+	</cffunction>
+
+	<cffunction name="setDataFactory" returntype="void" access="public" output="false">
+		<cfargument name="df" type="any" required="true" />
+	
+		<cfset variables.df = arguments.df />	
+	</cffunction>
+	
+	<cffunction name="getDataFactory" returntype="any" access="public" output="false">
+	
+		<cfreturn variables.df />	
 	</cffunction>
 
 	<!--- PRIVATE METHODS --->
@@ -281,14 +311,13 @@
 	</cffunction>
 
 	<cffunction name="sendRequest" returntype="void" access="private" output="false">
-		<cfargument name="absUrl" type="string" request="true" />
 
 		<cfset var data = 0 />
 		<cfset var error = 0 />
 
 		<cfset resetResponse() />
 
-		<cfset setRequestUrl(getBaseEndpoint()) />
+		<cfset setRequestUrl(getGlobalIdentifier()) />
 		
 		<cfset setHeader('Date', date_RFC1129()) />
 		
@@ -447,7 +476,7 @@
 	
 	<cffunction name="getResult" returntype="struct" access="public" output="false">
 
-		<cfset sendRequest(getBaseEndpoint()) />	
+		<cfset sendRequest() />	
 	
 		<cfreturn getResponse() />
 	</cffunction>

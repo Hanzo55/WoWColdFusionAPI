@@ -1,31 +1,27 @@
 <cfcomponent output="false" extends="com.blizzard.builder.AbstractRequestBuilder">
 
-	<cffunction name="init" returntype="RealmsRequestBuilder" access="public" output="false">
-		<cfargument name="bnet_host" type="string" required="true" />
-		<cfargument name="bnet_protocol" type="string" required="true" />
-			
-		<cfreturn super.init(argumentCollection=arguments) />
-	</cffunction>
-	
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
+		<cfset var absUrl		= '' />
 		<cfset var thisRealm = '' />
-		<cfset var realmList = '' />	
-		<cfset var realms = CreateObject('component','com.blizzard.request.RealmRequest').init(getPublicKey(), getPrivateKey(), getCache()) />
+		<cfset var realmList 	= '' />	
+		<cfset var reqObj 		= CreateObject( 'component', 'com.blizzard.request.RealmRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset reqObj			= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />		
 
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & realms.getEndpoint() />
+		<cfset absUrl 			= getBaseUrl() & reqObj.getResourceIdentifier() />
 
-		<cfif StructKeyExists(arguments,'name') AND Len(arguments.name)>
+		<cfif StructKeyExists( arguments, 'name' ) AND Len( arguments.name )>
 			<cfloop list="#arguments.name#" index="thisRealm">
-				<cfset realmList = ListAppend(realmList, variables.util.nameToSlug(Trim(thisRealm))) />
+				<cfset realmList = ListAppend( realmList, variables.util.nameToSlug( Trim( thisRealm ) ) ) />
 			</cfloop>
 
-			<cfset baseEndpoint = baseEndpoint & '?realms=' & realmList />
+			<cfset absUrl = absUrl & '?realms=' & realmList />
 		</cfif>
 		
-		<cfset realms.setBaseEndpoint(baseEndpoint) />
+		<cfset reqObj.setLocalization( getLocalization() ) />		
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfreturn realms />
+		<cfreturn reqObj />
 	</cffunction>
 	
 </cfcomponent>

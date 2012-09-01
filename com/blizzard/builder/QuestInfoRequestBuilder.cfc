@@ -1,21 +1,20 @@
 <cfcomponent output="false" extends="com.blizzard.builder.AbstractRequestBuilder">
 
-	<cffunction name="init" returntype="QuestInfoRequestBuilder" access="public" output="false">
-		<cfargument name="bnet_host" type="string" required="true" />
-		<cfargument name="bnet_protocol" type="string" required="true" />
-			
-		<cfreturn super.init(argumentCollection=arguments) />
-	</cffunction>
-	
 	<cffunction name="constructRequestObject" returntype="com.blizzard.request.AbstractRequest" access="public" output="false">
 	
-		<cfset var quest_info = CreateObject('component','com.blizzard.request.QuestInfoRequest').init(getPublicKey(), getPrivateKey(), getCache()) />
-		<cfset var baseUrl = quest_info.getEndpoint() & '/' & (arguments.questId) />
-		<cfset var baseEndpoint = getBnetProtocol() & getBnetHost() & baseUrl />
+		<cfset var ri		= 0 />
+		<cfset var absUrl	= 0 />
+
+		<cfset var reqObj 	= CreateObject( 'component', 'com.blizzard.request.QuestInfoRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
+		<cfset reqObj		= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />		
+
+		<cfset ri 			= reqObj.getResourceIdentifier() & '/' & ( arguments.questId ) />
+		<cfset absUrl 		= getBaseUrl() & ri />
+
+		<cfset reqObj.setLocalization( getLocalization() ) />		
+		<cfset reqObj.setGlobalIdentifier( absUrl ) />
 		
-		<cfset quest_info.setBaseEndpoint(baseEndpoint) />
-		
-		<cfreturn quest_info />
+		<cfreturn reqObj />
 	</cffunction>
 	
 </cfcomponent>

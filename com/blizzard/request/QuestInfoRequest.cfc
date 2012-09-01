@@ -1,17 +1,13 @@
-<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
+<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest">
 
-	<cffunction name="init" returntype="QuestInfoRequest" access="public" output="false">
-
-		<cfset setEndpoint('/api/wow/quest') />
-
-		<cfreturn super.init(argumentCollection=arguments) />
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
+	
+		<cfreturn '/quest' />
 	</cffunction>
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('quest') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('quest') ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">

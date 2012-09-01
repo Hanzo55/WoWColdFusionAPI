@@ -1,17 +1,13 @@
-<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
+<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest">
 
-	<cffunction name="init" returntype="GuildPerksRequest" access="public" output="false">
-
-		<cfset setEndpoint('/api/wow/data/guild/perks') />
-		
-		<cfreturn super.init(argumentCollection=arguments) />
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
+	
+		<cfreturn '/data/guild/perks' />
 	</cffunction>
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('perks') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('perks') ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">

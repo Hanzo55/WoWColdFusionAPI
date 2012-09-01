@@ -1,17 +1,13 @@
-<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
+<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest">
 
-	<cffunction name="init" returntype="BattlegroupsRequest" access="public" output="false">
-
-		<cfset setEndpoint('/api/wow/data/battlegroups/') />	<!--- the trailing slash is required for this one, with the intent that filters will be added in the future (ie. /battlegroups/ruin) --->
-		
-		<cfreturn super.init(argumentCollection=arguments) />
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
+	
+		<cfreturn '/data/battlegroups/' />	<!--- the trailing slash is required for this one, with the intent that filters will be added in the future (ie. /battlegroups/ruin) --->
 	</cffunction>
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('battlegroups') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('battlegroups') ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">

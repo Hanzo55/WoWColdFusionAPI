@@ -1,4 +1,4 @@
-<cfcomponent output="false" extends="com.blizzard.decorator.RequestDecorator">
+<cfcomponent output="false" extends="com.blizzard.decorator.RequestDecorator" implements="com.blizzard.interface.IRequestDecorator">
 
 	<cffunction name="init" returntype="AchievementCleaner" access="public" output="false">
 		<cfargument name="decorated" type="com.blizzard.request.AbstractRequest" required="true" />
@@ -7,6 +7,12 @@
 		
 		<cfreturn this />
 	</cffunction>
+	
+	<cffunction name="setGlobalIdentifier" returntype="void" access="public" output="false">
+		<cfargument name="gi" type="string" required="true" />
+		
+		<cfset getDecorated().setGlobalIdentifier( arguments.gi ) />
+	</cffunction>	
 
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">
 		<cfargument name="data" type="any" required="true" />
@@ -31,7 +37,7 @@
 		<cfset getDecorated().setResponseData(bad_data) />	
 	</cffunction>
 
-	<cffunction name="cleanJSON" returntype="string" access="private" output="false">
+	<cffunction name="cleanJSON" returntype="string" access="public" output="false">
 		<cfargument name="json" type="string" required="true" />
 
 		<cfset var data = 0 />

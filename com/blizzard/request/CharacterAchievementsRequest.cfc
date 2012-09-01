@@ -1,17 +1,13 @@
-<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
+<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest">
 
-	<cffunction name="init" returntype="CharacterAchievementsRequest" access="public" output="false">
-
-		<cfset setEndpoint('/api/wow/data/character/achievements') />
-		
-		<cfreturn super.init(argumentCollection=arguments) />
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
+	
+		<cfreturn '/data/character/achievements' />
 	</cffunction>
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('character_achievements') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('character_achievements' ) ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">

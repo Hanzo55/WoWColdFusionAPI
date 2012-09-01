@@ -1,17 +1,13 @@
-<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest" implements="com.blizzard.interface.IBnetRequest">
+<cfcomponent output="false" extends="com.blizzard.request.AbstractRequest">
 
-	<cffunction name="init" returntype="RealmRequest" access="public" output="false">
-
-		<cfset setEndpoint('/api/wow/realm/status') />
-		
-		<cfreturn super.init(argumentCollection=arguments) />
+	<cffunction name="getResourceIdentifier" returntype="string" access="public" output="false">
+	
+		<cfreturn '/realm/status' />
 	</cffunction>
 
 	<cffunction name="resetResponse" returntype="void" access="public" output="false">
 	
-		<cfset var result = getResultStruct('realms') />
-		
-		<cfset setResponse(result) />
+		<cfset setResponse( getResultStruct('realms') ) />
 	</cffunction>
 	
 	<cffunction name="setResponseData" returntype="void" access="public" output="false">
@@ -21,7 +17,6 @@
 		<cfset var realmStruct = StructNew() />
 		
 		<cfloop array="#arguments.data.realms#" index="realm">
-		
 			<cfset realmStruct['#variables.util.nameToSlug(realm.name)#'] = realm />
 		</cfloop>
 
