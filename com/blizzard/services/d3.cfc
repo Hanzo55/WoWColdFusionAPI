@@ -41,15 +41,21 @@ OTHER DEALINGS IN THE SOFTWARE.
 	<!--- PUBLIC METHODS --->
 	
 	<cffunction name="getCareer" returntype="struct" access="public" output="false">
-		<!--- HANZO: TODO: all explicit args --->
+		<cfargument name="profileId" type="string" required="true" />
 
 		<cfreturn variables.factory.getRequest('Career', arguments).getResult() />	
 	</cffunction>
 
 	<cffunction name="getHero" returntype="struct" access="public" output="false">
-		<!--- HANZO: TODO: all explicit args --->	
+		<cfargument name="profileId" type="string" required="true" />
+		<cfargument name="heroId" type="string" required="true" />
+		
+		<!--- check to make sure a character name isn't passed --->
+		<cfif NOT IsNumeric(arguments.heroId)>
+			<cfthrow type="IncorrectArgumentType" message="The second argument passed to getHero() is non-numeric." detail="The heroId argument passed to getHero(), '#arguments.heroId#', is not a valid type. Only numerical Ids can be supplied to the Battle.net API. To find out the Id of a particular character, use the getCareer() method for all characters assigned to a profile." />
+		</cfif>
 	
-		<cfreturn variables.factory.getRequest('Hero', arguments).getResult() />	
+		<cfreturn variables.factory.getRequest('Career', arguments).getResult() />	
 	</cffunction>
 	
 	<cffunction name="getItem" returntype="struct" access="public" output="false">
@@ -59,15 +65,29 @@ OTHER DEALINGS IN THE SOFTWARE.
 	</cffunction>
 	
 	<cffunction name="getFollower" returntype="struct" access="public" output="false">
-		<!--- HANZO: TODO: all explicit args --->
-	
-		<cfreturn variables.factory.getRequest('Follower', arguments).getResult() />	
+		<cfargument name="followerId" type="string" required="true" />
+		
+		<cfswitch expression="#arguments.followerId#">
+			<cfcase value="enchantress,templar,scoundrel">
+				<cfreturn variables.factory.getRequest('Follower', arguments).getResult() />					
+			</cfcase>
+			<cfdefaultcase>
+				<cfthrow type="IncorrectArgumentType" message="The argument passed to getFollower() is invalid." detail="The followerId argument passed to getFollower(), '#arguments.followerId#', is invalid. Valid values are 'templar', 'scoundrel', and 'enchantress'." />			
+			</cfdefaultcase>
+		</cfswitch>
 	</cffunction>	
 	
 	<cffunction name="getArtisan" returntype="struct" access="public" output="false">
-		<!--- HANZO: TODO: all explicit args --->
-	
-		<cfreturn variables.factory.getRequest('Artisan', arguments).getResult() />	
+		<cfargument name="artisanId" type="string" required="true" />
+
+		<cfswitch expression="#arguments.artisanId#">
+			<cfcase value="blacksmith,jeweler">
+				<cfreturn variables.factory.getRequest('Artisan', arguments).getResult() />
+			</cfcase>
+			<cfdefaultcase>
+				<cfthrow type="IncorrectArgumentType" message="The argument passed to getArtisan() is invalid." detail="The artisanId argument passed to getArtisan(), '#arguments.artisanId#', is invalid. Valid values are 'blacksmith' and 'jeweler'." />
+			</cfdefaultcase>
+		</cfswitch>
 	</cffunction>	
 	
 </cfcomponent>
