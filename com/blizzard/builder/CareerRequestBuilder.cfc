@@ -8,7 +8,12 @@
 		<cfset var reqObj	= CreateObject( 'component', 'com.blizzard.request.CareerRequest' ).init( getPublicKey(), getPrivateKey(), getCache() ) />
 		<cfset reqObj		= CreateObject( 'component', 'com.blizzard.decorator.LocaleSpecifier' ).init( reqObj ) />
 				
-		<cfset ri 			= reqObj.getResourceIdentifier() & '/' & arguments.profileId & '/'  />
+		<cfset ri 			= reqObj.getResourceIdentifier() & '/' & arguments.profileId  />
+		
+		<cfif StructKeyExists( arguments, 'heroId' ) and Len( arguments.heroId )>
+			<cfset ri	= ri & '/hero/' & arguments.heroId />
+		</cfif>
+		
 		<cfset absUrl 		= getBaseUrl() & ri />
 
 		<cfset reqObj.setLocalization( getLocalization() ) />		
